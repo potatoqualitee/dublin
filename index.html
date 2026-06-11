@@ -1,0 +1,1183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Code Will Change Your Life For The Better — Chrissy LeMaire</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS  ·  Data Céilí green, sage, yellow, and soft conference wash
+   ============================================================ */
+:root{
+  --paper:    oklch(0.986 0.004 154);
+  --paper-2:  oklch(0.946 0.018 154);
+  --ink:      oklch(0.225 0.024 252);
+  --ink-soft: oklch(0.420 0.022 246);
+  --line:     oklch(0.660 0.058 148 / .46);
+  --accent:   oklch(0.655 0.165 154);
+  --accent-ink: oklch(0.455 0.130 154);
+  --sage:     oklch(0.515 0.072 146);
+  --sage-dark:oklch(0.385 0.058 146);
+  --yellow:   oklch(0.865 0.165 88);
+  --peach:    oklch(0.835 0.095 56);
+  --wash:     oklch(0.905 0.038 188);
+
+  --sans: "Archivo", system-ui, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, monospace;
+
+  --stage-w: 1280px;
+  --stage-h: 720px;
+  --margin: 84px;
+
+  --dur: 380ms;
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{ height:100%; }
+body{
+  background: oklch(0.930 0.024 154);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+/* ============================================================
+   VIEWPORT  ·  centers the scaled stage on any screen
+   ============================================================ */
+#viewport{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(180deg, oklch(0.980 0.006 154) 0%, oklch(0.914 0.030 158) 100%);
+}
+
+#stage{
+  position: relative;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--paper) 94%, var(--wash)) 0%, var(--paper) 48%, color-mix(in oklch, var(--paper) 90%, var(--paper-2)) 100%);
+  color: var(--ink);
+  transform-origin: center center;
+  box-shadow: 0 1px 0 var(--line), 0 44px 84px -40px oklch(0.225 0.024 252 / .30);
+  overflow: hidden;
+}
+#stage::before{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:64px;
+  background:
+    linear-gradient(90deg,
+      color-mix(in oklch, var(--sage-dark) 75%, var(--paper)) 0%,
+      color-mix(in oklch, var(--wash) 72%, var(--yellow)) 48%,
+      color-mix(in oklch, var(--peach) 74%, var(--paper)) 100%);
+  opacity:.22;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ============================================================
+   PERSISTENT SPEC FRAME  ·  Swiss chrome around every slide
+   ============================================================ */
+.frame{ position:absolute; inset:0; pointer-events:none; z-index:5; }
+.frame .rule{ position:absolute; left:var(--margin); right:var(--margin); height:1px; background:var(--line); }
+.frame .rule.top{ top:68px; background:var(--sage); }
+.frame .rule.bottom{ bottom:54px; }
+.frame-logo{
+  position:absolute;
+  left:var(--margin);
+  top:16px;
+  width:150px;
+  height:auto;
+  filter: drop-shadow(0 4px 0 color-mix(in oklch, var(--yellow) 68%, transparent));
+}
+
+.frame .meta{
+  position:absolute;
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: .035em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.frame .meta.tl{ left:calc(var(--margin) + 178px); top:30px; }
+.frame .meta.tr{ right:var(--margin); top:30px; text-align:right; }
+.frame .meta.bl{ left:var(--margin); bottom:30px; }
+.frame .meta.br{ right:var(--margin); bottom:30px; text-align:right; }
+.frame .meta .dot{ color:var(--accent-ink); }
+
+#progress{
+  position:absolute; left:0; bottom:0; height:3px; width:0%;
+  background:linear-gradient(90deg, var(--sage-dark), var(--accent), var(--yellow), var(--peach)); z-index:6;
+  transition: width var(--dur) var(--ease);
+}
+
+/* ============================================================
+   SLIDES
+   ============================================================ */
+.slide{
+  position:absolute; inset:0;
+  padding: 96px var(--margin) 88px;
+  display:flex; flex-direction:column;
+  opacity:0; visibility:hidden;
+  z-index:1;
+  transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur);
+}
+.slide[data-active]{
+  opacity:1; visibility:visible;
+  transition: opacity var(--dur) var(--ease), visibility 0s;
+}
+
+/* entrance choreography: blocks rise + fade, staggered */
+.slide [data-reveal]{ opacity:0; transform: translateY(14px); }
+.slide[data-active] [data-reveal]{
+  opacity:1; transform:none;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition-delay: calc(var(--i, 0) * 70ms + 60ms);
+}
+
+/* ----- shared type ----- */
+.kicker{
+  font-family:var(--mono); font-size:15px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--accent-ink);
+}
+h1.title{
+  font-weight:700; line-height:.94; letter-spacing:-.025em;
+  font-size: 104px;
+  max-width:980px;
+}
+.title-tail{
+  display:inline-block;
+  align-self:flex-start;
+  margin-top:16px;
+  padding:8px 15px 9px;
+  border-left:6px solid var(--accent);
+  background:color-mix(in oklch, var(--yellow) 24%, var(--paper));
+  font-size:34px;
+  line-height:1;
+  font-weight:600;
+  color:var(--accent-ink);
+}
+.lede{ font-size:25px; line-height:1.5; color:var(--ink-soft); max-width:62ch; font-weight:400; }
+
+/* ===== title slide ===== */
+.brand-defs{ position:absolute; width:0; height:0; overflow:hidden; }
+.ceili-mark{
+  color:var(--accent-ink);
+  width:178px;
+  height:178px;
+  opacity:.30;
+  filter: drop-shadow(11px 10px 0 color-mix(in oklch, var(--yellow) 42%, transparent));
+  pointer-events:none;
+}
+.ceili-mark.title-mark{
+  position:absolute;
+  right:96px;
+  top:118px;
+  width:238px;
+  height:238px;
+  opacity:.16;
+}
+.s-title{ justify-content:center; }
+.s-title .lede{ margin-top:28px; }
+.s-title .event-line{
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  margin-top:30px;
+  font-family:var(--mono); font-size:14px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--sage-dark);
+}
+.s-title .event-line span{
+  border:1px solid color-mix(in oklch, var(--sage) 52%, transparent);
+  background:color-mix(in oklch, var(--yellow) 26%, var(--paper));
+  border-radius:999px;
+  padding:8px 13px;
+}
+.s-title .by{ margin-top:42px; display:flex; gap:16px; align-items:baseline; font-family:var(--mono); font-size:15px; color:var(--ink); letter-spacing:.02em; }
+.s-title .by .sep{ color:var(--line); }
+.s-title .by .mk{ color:var(--accent-ink); }
+
+/* ===== bio / who's talking ===== */
+.s-bio{ justify-content:center; }
+.s-bio .bio-name{ margin-top:16px; font-weight:700; letter-spacing:-.02em; line-height:.94; font-size:90px; }
+.s-bio .bio-creds{
+  list-style:none; display:flex; flex-wrap:wrap; align-items:center;
+  margin-top:32px; font-family:var(--mono); font-size:19px; color:var(--ink); letter-spacing:.01em;
+}
+.s-bio .bio-creds li{ display:inline-flex; align-items:center; }
+.s-bio .bio-creds li:not(:last-child)::after{ content:"·"; color:var(--accent-ink); margin:0 15px; }
+.s-bio .bio-line{ margin-top:34px; font-size:24px; line-height:1.45; color:var(--ink-soft); max-width:48ch; }
+
+/* ===== versus (browser chat vs on-machine agent) ===== */
+.s-versus{ flex-direction:column; padding-top:92px; }
+.s-versus .vs-title{ margin-top:10px; font-weight:700; letter-spacing:-.015em; line-height:1.08; font-size:46px; }
+.s-versus .vs-grid{
+  flex:1 1 auto; min-height:0; margin-top:46px;
+  display:grid; grid-template-columns:1fr 1fr;
+}
+.s-versus .vs-col{ display:flex; flex-direction:column; padding-right:56px; }
+.s-versus .vs-col + .vs-col{ padding-right:0; padding-left:56px; border-left:1px solid var(--line); }
+.s-versus .vs-where{ font-weight:700; letter-spacing:-.01em; line-height:1.02; font-size:34px; }
+.s-versus .vs-col.accent .vs-where{ color:var(--accent-ink); }
+.s-versus .vs-who{ margin-top:14px; font-family:var(--mono); font-size:18px; color:var(--ink-soft); letter-spacing:.01em; }
+.s-versus .vs-who .sep{ color:var(--accent-ink); margin:0 6px; }
+.s-versus .vs-desc{ margin-top:24px; font-size:22px; line-height:1.5; color:var(--ink-soft); max-width:32ch; }
+
+/* ===== showcase (screenshot-forward) ===== */
+.s-showcase{ flex-direction:column; padding-top:92px; }
+.sc-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:28px; }
+.sc-head .kicker{ display:block; margin-bottom:9px; }
+.sc-title{ font-weight:700; letter-spacing:-.015em; line-height:1.0; font-size:44px; }
+.sc-link{
+  font-family:var(--mono); font-size:19px; color:var(--accent-ink);
+  text-decoration:none; white-space:nowrap; letter-spacing:.01em; padding-bottom:4px;
+}
+.sc-link .arr{ color:var(--ink-soft); }
+.sc-link.muted{ color:var(--ink-soft); }
+.sc-note{ margin-top:14px; font-size:21px; line-height:1.45; color:var(--ink-soft); max-width:72ch; }
+.sc-shot{
+  position:relative; flex:1 1 auto; min-height:0; margin-top:22px;
+  border:1px solid var(--line); border-radius:5px; overflow:hidden;
+  background:var(--paper-2);
+  box-shadow: 0 22px 54px -30px oklch(0.225 0.024 252 / .44);
+}
+.sc-shot img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+.sc-shot.shot-center img{ object-position:center; }
+.sc-shot.shot-full img{ object-fit:contain; object-position:center; }
+/* full (uncropped) shots float on the paper: the frame chrome would otherwise
+   wrap the letterbox gaps and look broken. */
+.sc-shot.shot-full{ border-color:transparent; background:transparent; box-shadow:none; }
+.sc-shot.shot-full.linked:hover{ border-color:transparent; }
+/* clickable screenshots: open the real site in a new tab; clicks on the image
+   never advance the slide (the viewport handler ignores <a>). Arrows / clicks
+   on empty areas still navigate. */
+.sc-shot a{ position:absolute; inset:0; display:block; }
+.sc-shot.linked{ cursor:pointer; transition:border-color var(--dur) var(--ease); }
+.sc-shot.linked:hover{ border-color:var(--accent-ink); }
+.sc-shot.linked::after{
+  content:"open ↗"; position:absolute; top:12px; right:12px; z-index:3;
+  font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--paper); background:var(--accent-ink); padding:5px 10px; border-radius:4px;
+  opacity:0; transform:translateY(-4px);
+  transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  pointer-events:none;
+}
+.sc-shot.linked:hover::after{ opacity:1; transform:none; }
+/* zoomable screenshots: click opens a full-size lightbox instead of a link. */
+.sc-shot.zoomable{ cursor:zoom-in; }
+.sc-shot.zoomable::after{
+  content:"zoom ⤢"; position:absolute; top:12px; right:12px; z-index:3;
+  font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--paper); background:var(--accent-ink); padding:5px 10px; border-radius:4px;
+  opacity:0; transform:translateY(-4px);
+  transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  pointer-events:none;
+}
+.sc-shot.zoomable:hover::after{ opacity:1; transform:none; }
+/* click-to-zoom lightbox. Lives outside #stage so it ignores the slide scaling. */
+#lightbox{
+  position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:5vmin;
+  background:oklch(0.18 0.020 246 / .82); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  opacity:0; pointer-events:none; cursor:zoom-out; transition:opacity .28s var(--ease);
+}
+#lightbox.open{ opacity:1; pointer-events:auto; }
+#lightbox img{
+  max-width:94vw; max-height:92vh; display:block; border-radius:8px;
+  box-shadow:0 40px 120px -28px oklch(0.12 0.01 60 / .82);
+  transform:scale(.93); transition:transform .34s cubic-bezier(.2,.75,.2,1);
+}
+#lightbox[data-zoomed]{
+  overflow:auto;
+}
+#lightbox[data-zoomed] img{
+  max-width:none; max-height:none;
+}
+#lightbox.open img{ transform:scale(1); }
+#lightbox .lb-hint{
+  position:fixed; top:22px; right:26px; font-family:var(--mono); font-size:12px;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--paper); opacity:.65;
+}
+.sc-shot.placeholder{
+  border-style:dashed;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 11px, color-mix(in oklch,var(--line) 45%,transparent) 11px 12px);
+  box-shadow:none;
+}
+.sc-shot:not(.placeholder) .sc-ph{ display:none; }
+.sc-ph{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:13px; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-soft); text-align:center; padding:0 24px;
+}
+
+/* ===== closing act: the downside, the fix, hooks, sign-off ===== */
+.s-list{ flex-direction:column; padding-top:92px; }
+.s-list .body{ margin-top:34px; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:34px; justify-content:center; }
+.fix-row .fix-label{ font-family:var(--mono); font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink); }
+.fix-row .fix-line{ margin-top:14px; font-size:23px; line-height:1.45; color:var(--ink); max-width:62ch; }
+.chips{ margin-top:16px; display:flex; flex-wrap:wrap; gap:10px; }
+.chips .chip{
+  font-family:var(--mono); font-size:17px; color:var(--ink);
+  border:1px solid color-mix(in oklch, var(--sage) 46%, var(--line));
+  border-radius:999px;
+  padding:8px 13px;
+  background:color-mix(in oklch, var(--yellow) 18%, var(--paper));
+}
+.hooks{
+  margin-top:30px; flex:1 1 auto; min-height:0;
+  display:grid; grid-template-rows:repeat(5,auto); grid-auto-flow:column;
+  grid-template-columns:1fr 1fr; gap:0 44px; align-content:center;
+}
+.hooks .hook{ display:flex; gap:16px; align-items:baseline; padding:11px 0; border-bottom:1px solid color-mix(in oklch, var(--line) 78%, transparent); }
+.hooks .hook .hk{ font-family:var(--mono); font-size:15px; color:var(--accent-ink); white-space:nowrap; min-width:9.5em; }
+.hooks .hook .hd{ font-size:17px; line-height:1.3; color:var(--ink-soft); }
+.hooks .hook.meta .hd{ color:var(--ink); }
+.s-hook-intro{ justify-content:center; }
+.s-hook-intro .hook-wrap{
+  display:grid; grid-template-columns:420px minmax(0,1fr); gap:54px;
+  align-items:center;
+}
+.s-hook-intro .hook-title{
+  margin-top:16px;
+  font-weight:800; line-height:.95; letter-spacing:-.035em;
+  font-size:72px; color:var(--ink);
+}
+.s-hook-intro .hook-note{
+  margin-top:26px; font-size:25px; line-height:1.42; color:var(--ink-soft); max-width:17ch;
+}
+.s-hook-intro .hook-note .mk{ color:var(--accent-ink); }
+.control-stack{
+  display:grid; gap:14px;
+}
+.control-card{
+  position:relative;
+  border:1px solid color-mix(in oklch, var(--sage) 45%, var(--line));
+  border-radius:8px;
+  background:color-mix(in oklch, var(--paper) 76%, var(--paper-2));
+  padding:22px 24px 22px 26px;
+  box-shadow:12px 12px 0 color-mix(in oklch, var(--yellow) 18%, transparent);
+}
+.control-card::before{
+  content:"";
+  position:absolute; left:0; top:18px; bottom:18px; width:5px;
+  background:var(--accent);
+}
+.control-top{
+  display:flex; align-items:baseline; justify-content:space-between; gap:24px;
+}
+.control-name{
+  font-family:var(--mono); font-size:18px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent-ink);
+}
+.control-tag{
+  font-family:var(--mono); font-size:13px; letter-spacing:.04em;
+  color:var(--ink-soft); text-align:right;
+}
+.control-card p{
+  margin-top:12px; font-size:22px; line-height:1.3; color:var(--ink);
+}
+.control-examples{
+  margin-top:13px; display:flex; flex-wrap:wrap; gap:8px;
+}
+.control-examples span{
+  font-family:var(--mono); font-size:13px; color:var(--ink-soft);
+  border:1px solid color-mix(in oklch, var(--line) 72%, transparent);
+  border-radius:999px; padding:5px 9px;
+  background:color-mix(in oklch, var(--paper) 82%, var(--wash));
+}
+.s-close{ justify-content:center; }
+.s-close .lede-xl{ font-weight:700; letter-spacing:-.018em; line-height:1.12; font-size:50px; }
+.s-close .close-note{ margin-top:30px; font-size:24px; line-height:1.5; color:var(--ink-soft); max-width:52ch; }
+.s-close .close-note .mk{ color:var(--accent-ink); }
+.s-skills{ flex-direction:column; padding-top:92px; }
+.skill-grid{
+  margin-top:28px; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:18px;
+  flex:1 1 auto; min-height:0; align-items:stretch;
+}
+.skill-card{
+  border:1px solid color-mix(in oklch, var(--sage) 42%, var(--line));
+  border-radius:8px; background:color-mix(in oklch, var(--paper) 74%, var(--paper-2));
+  padding:20px; display:flex; flex-direction:column; min-height:0;
+}
+.skill-card h3{ font-size:30px; line-height:1; letter-spacing:-.015em; font-weight:700; }
+.skill-card .repo{
+  margin-top:10px; font-family:var(--mono); font-size:12px; letter-spacing:.01em; color:var(--accent-ink);
+}
+.skill-card .repo a{ color:inherit; text-decoration:none; border-bottom:1px solid color-mix(in oklch, var(--accent-ink) 45%, transparent); }
+.skill-card p{ margin-top:16px; font-size:17px; line-height:1.36; color:var(--ink-soft); }
+.skill-mini{
+  margin-top:auto; border:1px solid var(--line); border-radius:7px; background:var(--paper);
+  padding:13px; display:grid; gap:9px;
+}
+.skill-row{ display:grid; grid-template-columns:76px 1fr; gap:10px; align-items:center; font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
+.skill-bar{ height:8px; border-radius:999px; background:color-mix(in oklch, var(--line) 38%, var(--paper-2)); overflow:hidden; }
+.skill-bar span{ display:block; height:100%; background:linear-gradient(90deg,var(--sage-dark),var(--accent),var(--yellow)); }
+.before-after{ margin-top:auto; display:grid; gap:9px; }
+.text-sample{ border:1px solid var(--line); border-radius:7px; padding:12px 14px; font-size:16px; line-height:1.35; color:var(--ink-soft); background:var(--paper); }
+.text-sample.after{ color:var(--ink); border-color:color-mix(in oklch, var(--accent-ink) 45%, var(--line)); background:color-mix(in oklch, var(--accent) 10%, var(--paper)); }
+.s-rainbow{ justify-content:center; align-items:center; text-align:center; }
+.s-rainbow .rainbow-wrap{ width:600px; max-width:80%; }
+.s-rainbow svg.rainbow{ width:100%; height:auto; display:block; overflow:visible;
+  filter:drop-shadow(0 18px 26px oklch(0.225 0.024 252 / .16)); }
+/* arcs draw themselves in left-to-right when the slide lands */
+.s-rainbow .rainbow path{ stroke-dasharray:100; stroke-dashoffset:100; transition:stroke-dashoffset 1.05s var(--ease); }
+.s-rainbow[data-active] .rainbow path{ stroke-dashoffset:0; }
+.s-rainbow .rainbow path:nth-child(1){ transition-delay:.12s; }
+.s-rainbow .rainbow path:nth-child(2){ transition-delay:.19s; }
+.s-rainbow .rainbow path:nth-child(3){ transition-delay:.26s; }
+.s-rainbow .rainbow path:nth-child(4){ transition-delay:.33s; }
+.s-rainbow .rainbow path:nth-child(5){ transition-delay:.40s; }
+.s-rainbow .rainbow path:nth-child(6){ transition-delay:.47s; }
+.s-rainbow .rainbow path:nth-child(7){ transition-delay:.54s; }
+.s-rainbow .rainbow-line{ margin-top:20px; font-weight:700; letter-spacing:-.02em; line-height:1.06; font-size:58px; }
+
+/* ============================================================
+   HELP / HINT
+   ============================================================ */
+#hint{
+  position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--ink-soft);
+  background:color-mix(in oklch, var(--paper) 86%, transparent);
+  border:1px solid var(--line); border-radius:999px; padding:7px 16px;
+  z-index:20; transition:opacity .5s var(--ease); pointer-events:none;
+}
+#hint kbd{
+  font-family:var(--mono); background:var(--paper-2); border:1px solid var(--line);
+  border-radius:4px; padding:1px 6px; color:var(--ink); margin:0 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slide, .slide[data-active] [data-reveal], #progress{ transition:none !important; }
+  .slide [data-reveal]{ opacity:1; transform:none; }
+}
+</style>
+</head>
+
+<body>
+<div id="viewport">
+  <div id="stage">
+    <svg class="brand-defs" aria-hidden="true" focusable="false">
+      <defs>
+        <symbol id="ceili-icon" viewBox="0 0 160 160">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="80" cy="80" r="62" stroke="currentColor" stroke-width="5"/>
+            <g stroke="currentColor" stroke-width="7">
+              <path d="M80 31 C96 47 111 47 128 31 C113 67 113 93 128 129 C92 113 68 113 32 129 C47 93 47 67 32 31 C49 47 64 47 80 31Z"/>
+              <path d="M52 52 C66 66 66 94 52 108"/>
+              <path d="M108 52 C94 66 94 94 108 108"/>
+              <path d="M52 52 C66 66 94 66 108 52"/>
+              <path d="M52 108 C66 94 94 94 108 108"/>
+            </g>
+            <g stroke="var(--paper)" stroke-width="9">
+              <path d="M76 36 C80 47 80 55 80 63"/>
+              <path d="M124 76 C113 80 105 80 97 80"/>
+              <path d="M84 124 C80 113 80 105 80 97"/>
+              <path d="M36 84 C47 80 55 80 63 80"/>
+            </g>
+            <g stroke="currentColor" stroke-width="7">
+              <path d="M76 36 C80 47 80 55 80 63"/>
+              <path d="M124 76 C113 80 105 80 97 80"/>
+              <path d="M84 124 C80 113 80 105 80 97"/>
+              <path d="M36 84 C47 80 55 80 63 80"/>
+            </g>
+          </g>
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- persistent spec frame (shared chrome) -->
+    <div class="frame" aria-hidden="true">
+      <div class="rule top"></div>
+      <div class="rule bottom"></div>
+      <img class="frame-logo" src="logo.png" alt="">
+      <div class="meta tl">Data Céilí 2026</div>
+      <div class="meta tr">Chrissy LeMaire <span class="dot">·</span> Trinity College Dublin</div>
+      <div class="meta bl" id="section-label">§00 — cold open</div>
+      <div class="meta br"><span id="page-cur">01</span> / <span id="page-total">31</span></div>
+    </div>
+
+    <!-- ===================== SLIDE 1 · TITLE ===================== -->
+    <section class="slide s-title" data-section="§00 — cold open">
+      <svg class="ceili-mark title-mark" aria-hidden="true" focusable="false"><use href="#ceili-icon"></use></svg>
+      <h1 class="title" data-reveal style="--i:0">CLAUDE CODE</h1>
+      <p class="title-tail" data-reveal style="--i:1">will change your life</p>
+      <div class="event-line" data-reveal style="--i:2">
+        <span>Data Céilí 2026</span>
+        <span>Trinity College Dublin</span>
+        <span>12 June</span>
+      </div>
+      <p class="lede" data-reveal style="--i:3">I haven't written a line of code in months.</p>
+      <div class="by" data-reveal style="--i:4">
+        <span>Chrissy LeMaire</span><span class="sep">/</span>
+        <span>Dublin 2026</span>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 2 · WHO'S TALKING ===================== -->
+    <section class="slide s-bio" data-section="§00 — who's talking">
+      <p class="kicker" data-reveal style="--i:0">Who's talking</p>
+      <h2 class="bio-name" data-reveal style="--i:1">Chrissy LeMaire</h2>
+      <ul class="bio-creds" data-reveal style="--i:2">
+        <li>Microsoft MVP</li>
+        <li>GitHub Star</li>
+        <li>Manning author</li>
+        <li>creator of dbatools</li>
+        <li>full-time enterprise vibe coder</li>
+      </ul>
+      <p class="bio-line" data-reveal style="--i:3">I build tools to make myself more productive and it's so addictive.</p>
+    </section>
+
+    <!-- ===================== SLIDE 3 · BROWSER vs COMPUTER ===================== -->
+    <section class="slide s-versus" data-section="§01 — meet claude code">
+      <span class="kicker" data-reveal style="--i:0">Know the difference</span>
+      <h2 class="vs-title" data-reveal style="--i:1">One lives in a tab.<br>One lives on your machine.</h2>
+      <div class="vs-grid">
+        <div class="vs-col" data-reveal style="--i:2">
+          <h3 class="vs-where">In the browser</h3>
+          <p class="vs-who">claude.ai <span class="sep">·</span> chatgpt.com <span class="sep">·</span> gemini.google</p>
+          <p class="vs-desc">Lives in a tab. It reads and writes text, and that's the whole job. It can't open your files or run a single command.</p>
+        </div>
+        <div class="vs-col accent" data-reveal style="--i:3">
+          <h3 class="vs-where">On your computer</h3>
+          <p class="vs-who">Claude Code <span class="sep">·</span> Codex <span class="sep">·</span> Gemini CLI</p>
+          <p class="vs-desc">Lives on your machine. It reads your files and runs commands to make real changes. Usually inside a sandbox. Not always.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 4 · THE LAB (MACHINE ACCESS) ===================== -->
+    <section class="slide s-showcase" data-section="§01 — meet claude code">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Machine access</span>
+          <h2 class="sc-title" data-reveal style="--i:1">It mapped my whole network</h2>
+        </div>
+        <a class="sc-link" data-reveal style="--i:2" href="https://blog.netnerds.net/lab" target="_blank" rel="noopener">blog.netnerds.net/lab <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">I handed Claude my machine and said, map it. It found the VMs, SQL instances, subnets, and SSH tunnel, then made the diagram I needed.</p>
+      <figure class="sc-shot placeholder linked" data-reveal style="--i:3">
+        <span class="sc-ph">drop references/shot-lab.png · live HyperV topology snapshot</span>
+        <a href="https://blog.netnerds.net/lab" target="_blank" rel="noopener"><img src="references/shot-lab.png" alt="Live HyperV lab topology mapped by Claude"
+             onload="this.closest('.sc-shot').classList.remove('placeholder')" onerror="this.remove()"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 5 · CLAUDE CODE — CLI ===================== -->
+    <section class="slide s-showcase" data-section="§01 — meet claude code">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Command line</span>
+          <h2 class="sc-title" data-reveal style="--i:1">Where I spend my day</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">mac · windows · linux</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Opus 4.8, a million tokens of context, the whole repo in its head. I just talk to it.</p>
+      <figure class="sc-shot linked" data-reveal style="--i:3">
+        <a href="https://claude.com/claude-code" target="_blank" rel="noopener"><img src="references/shot-cc-cli.png" alt="Claude Code running in a terminal, Opus 4.8 with 1M context"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 6 · CLAUDE CODE — DESKTOP ===================== -->
+    <section class="slide s-showcase" data-section="§01 — meet claude code">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Desktop app</span>
+          <h2 class="sc-title" data-reveal style="--i:1">No terminal required</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">mac · windows</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">(Mostly) the same agent, friendlier interface.</p>
+      <figure class="sc-shot shot-full zoomable" data-zoom="1.75" data-reveal style="--i:3">
+        <img src="references/shot-cc-desktop.png" alt="Claude Code desktop app showing a usage dashboard">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 7 · CLAUDE CODE — VS CODE ===================== -->
+    <section class="slide s-showcase" data-section="§01 — meet claude code">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">VS Code</span>
+          <h2 class="sc-title" data-reveal style="--i:1">This deck was built here</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">editor extension</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Right next to the code. The slides you're watching were written in that panel.</p>
+      <figure class="sc-shot shot-full zoomable" data-reveal style="--i:3">
+        <img src="references/shot-cc-vscode.png" alt="Claude Code in VS Code building this slide deck">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 8 · CODEX (OPENAI) ===================== -->
+    <section class="slide s-showcase" data-section="§02 — the others">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Got ChatGPT by OpenAI?</span>
+          <h2 class="sc-title" data-reveal style="--i:1">You've got Codex</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">openai codex</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Same idea, different company and model. Here it's chasing Dependabot failures across dbatools and pinning every action to a SHA.</p>
+      <figure class="sc-shot shot-full zoomable" data-zoom="1.75" data-reveal style="--i:3">
+        <img src="references/shot-codex.png" alt="OpenAI Codex investigating Dependabot failures in the dbatools repo">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 9 · GITHUB COPILOT ===================== -->
+    <section class="slide s-showcase" data-section="§02 — the others">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">GitHub Copilot</span>
+          <h2 class="sc-title" data-reveal style="--i:1">I don't use GitHub Copilot anymore</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">usage-based billing</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">GitHub put Copilot on usage-based billing. A typical estimate looks like this. Mine still ran past 300 a month, more than I'll pay. Codex is the best value right now, but that changes month to month.</p>
+      <figure class="sc-shot shot-full" data-reveal style="--i:3">
+        <img src="references/github-billing.webp" alt="GitHub Copilot usage-based billing estimate: 39 dollars a month versus over 1000 under the new model">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 10 · FINISHED PROJECTS (INTRO) ===================== -->
+    <section class="slide s-close" data-section="§03 — what i shipped">
+      <span class="kicker" data-reveal style="--i:0">The real shift</span>
+      <h2 class="lede-xl" data-reveal style="--i:1">Claude Code made impossible amounts of work possible.</h2>
+      <p class="close-note" data-reveal style="--i:2">Not because I lacked skill. Because some jobs are just too big for one person: migrations, cleanup, translations, and all the tiny steps between idea and done.</p>
+    </section>
+
+    <!-- ===================== SLIDE 11 · dbatools.io ===================== -->
+    <section class="slide s-showcase" data-section="§03 — what i shipped">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Rebuilt</span>
+          <h2 class="sc-title" data-reveal style="--i:1">dbatools.io, in a day</h2>
+        </div>
+        <a class="sc-link" data-reveal style="--i:2" href="https://dbatools.io" target="_blank" rel="noopener">dbatools.io <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Gave Claude the old HTML. Got back dark mode and a getting-started guide that actually helps.</p>
+      <figure class="sc-shot shot-full linked" data-reveal style="--i:3">
+        <a href="https://dbatools.io" target="_blank" rel="noopener"><img src="references/shot-dbatools.png" alt="Redesigned dbatools.io homepage with dark hero terminal"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 12 · realcajunrecipes.com ===================== -->
+    <section class="slide s-showcase" data-section="§03 — what i shipped">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Off WordPress</span>
+          <h2 class="sc-title" data-reveal style="--i:1">realcajunrecipes.com</h2>
+        </div>
+        <a class="sc-link" data-reveal style="--i:2" href="https://realcajunrecipes.com" target="_blank" rel="noopener">realcajunrecipes.com <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Twenty years of recipes, off WordPress, now static and unhackable. Then the part I wanted for years: French French at scale.</p>
+      <figure class="sc-shot linked" data-reveal style="--i:3">
+        <a href="https://realcajunrecipes.com" target="_blank" rel="noopener"><img src="references/shot-realcajunrecipes.png" alt="realcajunrecipes.com themed cookbook collection page"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 13 · THE HAGUE ===================== -->
+    <section class="slide s-showcase" data-section="§03 — what i shipped">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Where to live</span>
+          <h2 class="sc-title" data-reveal style="--i:1">I BUILT A MAPS APP!</h2>
+        </div>
+        <a class="sc-link" data-reveal style="--i:2" href="https://haguehouse.pages.dev" target="_blank" rel="noopener">haguehouse.pages.dev <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Every grocery, vet, tram, and rent in The Hague, scored. Double-click into street view.</p>
+      <figure class="sc-shot shot-full linked" data-reveal style="--i:3">
+        <a href="https://haguehouse.pages.dev" target="_blank" rel="noopener"><img src="references/hague.webp" alt="Den Haag livability map with a 76 out of 100 score panel"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 14 · BLOG MAINTENANCE ===================== -->
+    <section class="slide s-showcase" data-section="§04 — maintenance work">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Blog maintenance</span>
+          <h2 class="sc-title" data-reveal style="--i:1">100+ posts, one prompt</h2>
+        </div>
+        <a class="sc-link" data-reveal style="--i:2" href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener">blog-refresh.md <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Not content generation. Maintenance. Links, screenshots, commands, Twitter embeds. The work that always loses to everything else.</p>
+      <figure class="sc-shot shot-full linked" data-reveal style="--i:3">
+        <a href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener"><img src="references/ai-cli-blog.png" alt="Update your blog with an AI CLI hero image"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 15 · AI FIXES MICROSOFT LINK ROT ===================== -->
+    <section class="slide s-showcase" data-section="§04 — maintenance work">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Link rot</span>
+          <h2 class="sc-title" data-reveal style="--i:1">AI fixed Microsoft's link rot</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">2016-2025</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Microsoft docs moved. Again. It tested the links, found current pages, and turned old blue PowerShell screenshots into searchable text.</p>
+      <figure class="sc-shot shot-full zoomable" data-zoom="1.75" data-reveal style="--i:3">
+        <img src="references/ai-fixes-microsoft-link-rot.png" alt="AI fixing Microsoft's link rot and converting screenshots to text">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 16 · AI UPDATES MOVED LINKS ===================== -->
+    <section class="slide s-showcase" data-section="§04 — maintenance work">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Judgment calls</span>
+          <h2 class="sc-title" data-reveal style="--i:1">It followed the people, too</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">not find-and-replace</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Old Twitter embeds vanished. Friends moved blogs. It went looking, found the new homes, and left the history that was still true.</p>
+      <figure class="sc-shot shot-full zoomable" data-zoom="1.75" data-reveal style="--i:3">
+        <img src="references/ai-updates-moved-blog-links.png" alt="AI updating links when friends move their blogs and podcasts">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 17 · HOOKS / SKILLS / COMMANDS INTRO ===================== -->
+    <section class="slide s-hook-intro" data-section="§05 — the honest part">
+      <div class="hook-wrap">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Why Claude Code feels different</span>
+          <h2 class="hook-title" data-reveal style="--i:1">Control surfaces for agents</h2>
+          <p class="hook-note" data-reveal style="--i:2"><span class="mk">Policy.</span> Context. Receipts.</p>
+        </div>
+        <div class="control-stack" data-reveal style="--i:3">
+          <div class="control-card">
+            <div class="control-top">
+              <span class="control-name">Hooks</span>
+              <span class="control-tag">before, during, after</span>
+            </div>
+            <p>Block bad moves before they land in the repo.</p>
+            <div class="control-examples">
+              <span>read-before-edit</span>
+              <span>test gate</span>
+              <span>stop check</span>
+            </div>
+          </div>
+          <div class="control-card">
+            <div class="control-top">
+              <span class="control-name">Skills</span>
+              <span class="control-tag">progressive disclosure</span>
+            </div>
+            <p>Load the right rules only when the work needs them.</p>
+            <div class="control-examples">
+              <span>repo rules</span>
+              <span>domain docs</span>
+              <span>voice</span>
+            </div>
+          </div>
+          <div class="control-card">
+            <div class="control-top">
+              <span class="control-name">Commands</span>
+              <span class="control-tag">repeatable routines</span>
+            </div>
+            <p>Turn the checklist you keep repeating into one slash command.</p>
+            <div class="control-examples">
+              <span>/ralph</span>
+              <span>/session-analysis</span>
+              <span>verify</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 18 · HOOKS ===================== -->
+    <section class="slide s-list" data-section="§05 — the honest part">
+      <span class="kicker" data-reveal style="--i:0">Hooks</span>
+      <h2 class="sc-title" data-reveal style="--i:1">Hooks make the repo push back</h2>
+      <p class="sc-note" data-reveal style="--i:1">Pre-write hooks catch bad edits. Stop hooks catch bad endings. Command hooks quietly improve the shell.</p>
+      <div class="hooks" data-reveal style="--i:2">
+        <div class="hook"><span class="hk">read-before-edit</span><span class="hd">No mutation until the file was read this session.</span></div>
+        <div class="hook"><span class="hk">sql injection</span><span class="hd">Interpolated SQL gets blocked. Parameters or nothing.</span></div>
+        <div class="hook"><span class="hk">auth sentinel</span><span class="hd">Auth config cannot vanish in a drive-by edit.</span></div>
+        <div class="hook"><span class="hk">token trampoline</span><span class="hd">No endpoint can mint caller-chosen admin tokens.</span></div>
+        <div class="hook"><span class="hk">tests for files</span><span class="hd">Every source file maps to the test it owes.</span></div>
+        <div class="hook"><span class="hk">stop gate</span><span class="hd">Before done, missing tests still block.</span></div>
+        <div class="hook"><span class="hk">rtk rewriter</span><span class="hd">Shell commands get filtered, shortened, or stopped.</span></div>
+        <div class="hook"><span class="hk">line endings</span><span class="hd">Rejects CRLF before it creates diff noise.</span></div>
+        <div class="hook"><span class="hk">localhost fetch</span><span class="hd">Containers use service names, not fake localhost.</span></div>
+        <div class="hook meta"><span class="hk">file size cop</span><span class="hd">About to write a 900-line monster? It warns first.</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 19 · SKILLS ===================== -->
+    <section class="slide s-skills" data-section="§05 — the honest part">
+      <span class="kicker" data-reveal style="--i:0">Skills</span>
+      <h2 class="sc-title" data-reveal style="--i:1">Skills teach taste and tools</h2>
+      <p class="sc-note" data-reveal style="--i:1">Your rules, your voice, and how to use the thing without guessing.</p>
+
+      <div class="skill-grid">
+        <div class="skill-card" data-reveal style="--i:2">
+          <h3>Impeccable</h3>
+          <div class="repo"><a href="https://github.com/pbakaus/impeccable" target="_blank" rel="noreferrer">github.com/pbakaus/impeccable</a></div>
+          <p>Taste: hierarchy, contrast, spacing, and a very healthy dislike of samey AI interfaces.</p>
+          <div class="skill-mini" aria-label="Impeccable scorecard illustration">
+            <div class="skill-row"><span>hierarchy</span><div class="skill-bar"><span style="width:92%"></span></div></div>
+            <div class="skill-row"><span>contrast</span><div class="skill-bar"><span style="width:84%"></span></div></div>
+            <div class="skill-row"><span>spacing</span><div class="skill-bar"><span style="width:88%"></span></div></div>
+            <div class="skill-row"><span>AI tells</span><div class="skill-bar"><span style="width:18%"></span></div></div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-reveal style="--i:3">
+          <h3>Humanizer</h3>
+          <div class="repo"><a href="https://github.com/blader/humanizer" target="_blank" rel="noreferrer">github.com/blader/humanizer</a></div>
+          <p>Voice: cuts the shiny mush, then asks what still sounds fake.</p>
+          <div class="before-after" aria-label="Humanizer before and after illustration">
+            <div class="text-sample">Before: a pivotal, seamless, transformative solution that unlocks operational excellence.</div>
+            <div class="text-sample after">After: the hook stops obvious mistakes before they land in the repo.</div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-reveal style="--i:4">
+          <h3>dbatools</h3>
+          <div class="repo"><a href="https://dbatools.io" target="_blank" rel="noreferrer">dbatools.io</a></div>
+          <p>Usage: 700+ SQL Server commands, WhatIf first, backups, restores, migrations, AGs, and exact output fields.</p>
+          <div class="skill-mini" aria-label="dbatools command guide illustration">
+            <div class="skill-row"><span>backup</span><div class="skill-bar"><span style="width:88%"></span></div></div>
+            <div class="skill-row"><span>restore</span><div class="skill-bar"><span style="width:82%"></span></div></div>
+            <div class="skill-row"><span>migrate</span><div class="skill-bar"><span style="width:76%"></span></div></div>
+            <div class="skill-row"><span>WhatIf</span><div class="skill-bar"><span style="width:96%"></span></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 20 · COMMANDS ===================== -->
+    <section class="slide s-list" data-section="§05 — the honest part">
+      <span class="kicker" data-reveal style="--i:0">Commands</span>
+      <h2 class="sc-title" data-reveal style="--i:1">Commands package the playbook</h2>
+      <p class="sc-note" data-reveal style="--i:1">A slash command captures the sequence: plan one item, run checks, review bugs, report evidence.</p>
+      <div class="body">
+        <div class="fix-row" data-reveal style="--i:2">
+          <p class="fix-label">Real shapes</p>
+          <div class="chips">
+            <span class="chip">/ralph</span>
+            <span class="chip">/session-analysis</span>
+            <span class="chip">verify</span>
+            <span class="chip">test</span>
+            <span class="chip">bug review</span>
+            <span class="chip">handoff</span>
+          </div>
+        </div>
+        <div class="fix-row" data-reveal style="--i:3">
+          <p class="fix-label">The real unlock</p>
+          <p class="fix-line">Same phases every time. Same checks. Same receipt.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 21 · YAY ENTERPRISE ===================== -->
+    <section class="slide s-list" data-section="§05 — the honest part">
+      <span class="kicker" data-reveal style="--i:0">Yay enterprise</span>
+      <h2 class="sc-title" data-reveal style="--i:1">That's what makes it enterprise</h2>
+      <p class="sc-note" data-reveal style="--i:1">Hooks, skills, and commands are why the agent can run forward without making the repo a trust fall.</p>
+      <div class="body">
+        <div class="fix-row" data-reveal style="--i:2">
+          <p class="fix-label">What changes</p>
+          <div class="chips">
+            <span class="chip">policy</span>
+            <span class="chip">repeatability</span>
+            <span class="chip">receipts</span>
+            <span class="chip">review</span>
+          </div>
+        </div>
+        <div class="fix-row" data-reveal style="--i:3">
+          <p class="fix-label">The good part</p>
+          <p class="fix-line">It can move faster because the system around it has memory, taste, and consequences.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 22 · MICROSOFT / THE CATCH (FOWLER) ===================== -->
+    <section class="slide s-showcase" data-section="§05 — the honest part">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">But</span>
+          <h2 class="sc-title" data-reveal style="--i:1">Microsoft found the bill</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">david fowler · microsoft</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">David Fowler's team got faster with AI. Then the work moved into review, maintenance, and ownership.</p>
+      <figure class="sc-shot shot-full zoomable" data-zoom="1.75" data-reveal style="--i:3">
+        <img src="references/shot-fowler.png" alt="David Fowler's article, AI Made Us Faster. That Was the Problem.">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 23 · THE MITIGATION ===================== -->
+    <section class="slide s-list" data-section="§05 — the honest part">
+      <span class="kicker" data-reveal style="--i:0">The old guard</span>
+      <h2 class="sc-title" data-reveal style="--i:1">Bring the old guards back</h2>
+      <p class="sc-note" data-reveal style="--i:1">Scanners on the outside. Hooks on the inside. A human at the merge.</p>
+      <div class="body">
+        <div class="fix-row" data-reveal style="--i:2">
+          <p class="fix-label">Classic scanners, every PR</p>
+          <div class="chips">
+            <span class="chip">CodeQL</span>
+            <span class="chip">Dependabot</span>
+            <span class="chip">Gitleaks</span>
+            <span class="chip">Semgrep</span>
+            <span class="chip">Trivy</span>
+            <span class="chip">PSScriptAnalyzer</span>
+            <span class="chip">OWASP ZAP</span>
+          </div>
+        </div>
+        <div class="fix-row" data-reveal style="--i:3">
+          <p class="fix-label">Agent-specific tripwires</p>
+          <div class="chips">
+            <span class="chip">read-before-edit</span>
+            <span class="chip">tests-must-cover</span>
+            <span class="chip">command rewriter</span>
+            <span class="chip">stop gate</span>
+            <span class="chip">file size cop</span>
+          </div>
+        </div>
+        <div class="fix-row" data-reveal style="--i:4">
+          <p class="fix-label">A human owns the merge</p>
+          <p class="fix-line">The agent proposes. A person reads it and approves. Nothing ships on the agent's word alone.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 24 · BEYOND CODE (INTRO) ===================== -->
+    <section class="slide s-close" data-section="§06 — beyond code">
+      <span class="kicker" data-reveal style="--i:0">Beyond code</span>
+      <h2 class="lede-xl" data-reveal style="--i:1">I write papers the way<br>I write software.</h2>
+      <p class="close-note" data-reveal style="--i:2">Same harness, <span class="mk">no code</span>. A repo per client, with skills, hooks, and memory. Source in, a finished brief out.</p>
+    </section>
+
+    <!-- ===================== SLIDE 25 · A REPO PER CLIENT ===================== -->
+    <section class="slide s-showcase" data-section="§06 — beyond code">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">The setup</span>
+          <h2 class="sc-title" data-reveal style="--i:1">A repo for every client</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">markdown in · .docx out</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">One folder per engagement. A CLAUDE.md, a reference shelf, source in, a finished Word doc out. Diffed and reviewed like code.</p>
+      <figure class="sc-shot placeholder" data-reveal style="--i:3">
+        <span class="sc-ph">drop references/shot-bizdev.png · the workspace tree, or a rendered brief</span>
+        <img src="references/shot-bizdev.png" alt="The bizdev workspace: one repo per client, markdown source rendered to a finished Word brief"
+             onload="this.closest('.sc-shot').classList.remove('placeholder')" onerror="this.remove()">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 26 · EDITOR, NOT AUTHOR ===================== -->
+    <section class="slide s-close" data-section="§06 — beyond code">
+      <span class="kicker" data-reveal style="--i:0">The rule</span>
+      <h2 class="lede-xl" data-reveal style="--i:1">I bring the content.<br>It brings the grammar.</h2>
+      <p class="close-note" data-reveal style="--i:2">No slop. The ideas and the facts are mine. It words them better, like an editor, not a ghostwriter.</p>
+    </section>
+
+    <!-- ===================== SLIDE 27 · IT REMEMBERS THE REVIEWER ===================== -->
+    <section class="slide s-list" data-section="§06 — beyond code">
+      <span class="kicker" data-reveal style="--i:0">Memory</span>
+      <h2 class="sc-title" data-reveal style="--i:1">Captured once. Spoken on every draft.</h2>
+      <p class="sc-note" data-reveal style="--i:1">The reviewer's house style lives in memory. The next draft already speaks their dialect.</p>
+      <div class="body">
+        <div class="fix-row" data-reveal style="--i:2">
+          <p class="fix-label">What it keeps</p>
+          <div class="chips">
+            <span class="chip">British English</span>
+            <span class="chip">capitalise the Programme</span>
+            <span class="chip">platform costs only</span>
+            <span class="chip">cite Marlowe's Rule</span>
+            <span class="chip">active voice, no filler</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 28 · THE HOOKS, FOR PROSE ===================== -->
+    <section class="slide s-list" data-section="§06 — beyond code">
+      <span class="kicker" data-reveal style="--i:0">Guardrails, again</span>
+      <h2 class="sc-title" data-reveal style="--i:1">The hooks know it's not code</h2>
+      <p class="sc-note" data-reveal style="--i:1">Same machinery as before. Different rules. These read prose, not SQL.</p>
+      <div class="hooks" data-reveal style="--i:2">
+        <div class="hook"><span class="hk">en-GB</span><span class="hd">Catches American spelling before it lands.</span></div>
+        <div class="hook"><span class="hk">house-style</span><span class="hd">Active voice, no filler, the reviewer's rules.</span></div>
+        <div class="hook"><span class="hk">in-repo-only</span><span class="hd">Writes outside the workspace are blocked.</span></div>
+        <div class="hook"><span class="hk">kebab-case</span><span class="hd">Filenames stay lowercase and hyphenated.</span></div>
+        <div class="hook"><span class="hk">scripts-dir</span><span class="hd">Scripts live in scripts, nowhere else.</span></div>
+        <div class="hook"><span class="hk">two-plans</span><span class="hd">An internal spec, plus a clean client copy.</span></div>
+        <div class="hook"><span class="hk">reference-shelf</span><span class="hd">Loads the standards every session, unprompted.</span></div>
+        <div class="hook"><span class="hk">mirror-memory</span><span class="hd">New facts saved back into the repo.</span></div>
+        <div class="hook"><span class="hk">tidiness-check</span><span class="hd">Flags stray files before I stop.</span></div>
+        <div class="hook meta"><span class="hk">source-check</span><span class="hd">Every claim points back to a reference.</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 29 · SAME HARNESS, DIFFERENT WORK ===================== -->
+    <section class="slide s-close" data-section="§06 — beyond code">
+      <span class="kicker" data-reveal style="--i:0">Same harness</span>
+      <h2 class="lede-xl" data-reveal style="--i:1">Swap the work.<br>The system holds.</h2>
+      <p class="close-note" data-reveal style="--i:2">Skills, hooks, memory, all text on disk. It ran my code. <span class="mk">Now it runs the rest of my job.</span></p>
+    </section>
+
+    <!-- ===================== SLIDE 30 · CLOSING ===================== -->
+    <section class="slide s-close" data-section="§07 — closing">
+      <span class="kicker" data-reveal style="--i:0">Where this leaves us</span>
+      <h2 class="lede-xl" data-reveal style="--i:1">There's a lot of doom.<br>I'm all in anyway.</h2>
+      <p class="close-note" data-reveal style="--i:2">I'm doing this full time now, building a company on <span class="mk">exactly what you just saw.</span> We still need software engineers, just with different skills. Every prompt, I use what I learned building dbatools and running systems. Same skills, accelerated.</p>
+    </section>
+
+    <!-- ===================== SLIDE 31 · THE OLD GUARD IS MOVING ===================== -->
+    <section class="slide s-showcase" data-section="§07 — closing">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Not just me</span>
+          <h2 class="sc-title" data-reveal style="--i:1">So are other old guards.</h2>
+        </div>
+        <a class="sc-link" href="https://www.linkedin.com/feed/update/urn:li:activity:7468010497573978112/" target="_blank" rel="noopener" data-reveal style="--i:1">source <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Linus Torvalds. Daniel Stenberg, creator of curl. The people who built the pipes are paying attention.</p>
+      <figure class="sc-shot shot-full zoomable" data-zoom="1.75" data-reveal style="--i:3">
+        <img src="references/positive.jpg" alt="Daniel Stenberg on AI in security: sentiment over time, showing an upward turn toward pro-AI tooling">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 32 · RAINBOW FINALE ===================== -->
+    <section class="slide s-rainbow" data-section="§07 — closing">
+      <div class="rainbow-wrap" data-reveal style="--i:0">
+        <svg class="rainbow" viewBox="0 0 400 200" role="img" aria-label="A rainbow">
+          <g fill="none" stroke-width="13">
+            <path pathLength="100" d="M20 190 A180 180 0 0 1 380 190" stroke="#E5484D"/>
+            <path pathLength="100" d="M36 190 A164 164 0 0 1 364 190" stroke="#F76B15"/>
+            <path pathLength="100" d="M52 190 A148 148 0 0 1 348 190" stroke="#FFC53D"/>
+            <path pathLength="100" d="M68 190 A132 132 0 0 1 332 190" stroke="#46A758"/>
+            <path pathLength="100" d="M84 190 A116 116 0 0 1 316 190" stroke="#3E63DD"/>
+            <path pathLength="100" d="M100 190 A100 100 0 0 1 300 190" stroke="#6E56CF"/>
+            <path pathLength="100" d="M116 190 A84 84 0 0 1 284 190" stroke="#AB4ABA"/>
+          </g>
+        </svg>
+      </div>
+      <h2 class="rainbow-line" data-reveal style="--i:1">I get to build<br>anything I want now.</h2>
+    </section>
+
+  </div>
+</div>
+
+<div id="hint"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; <kbd>F</kbd> fullscreen &nbsp;·&nbsp; <kbd>?</kbd> help</div>
+
+<div id="lightbox" aria-hidden="true">
+  <span class="lb-hint">esc / click to close</span>
+  <img alt="">
+</div>
+
+<script>
+(() => {
+  const stage   = document.getElementById('stage');
+  const viewport= document.getElementById('viewport');
+  const slides  = [...document.querySelectorAll('.slide')];
+  const progress= document.getElementById('progress-bar') || createProgress();
+  const pageCur = document.getElementById('page-cur');
+  const pageTot = document.getElementById('page-total');
+  const secLbl  = document.getElementById('section-label');
+  const hint    = document.getElementById('hint');
+  const lightbox= document.getElementById('lightbox');
+  const lbImg   = lightbox.querySelector('img');
+  const openZoom  = img => {
+    const scale = parseFloat(img.closest('.sc-shot')?.dataset.zoom || '');
+    lbImg.onload = () => {
+      if (scale && lbImg.naturalWidth) lbImg.style.width = Math.round(lbImg.naturalWidth * scale) + 'px';
+    };
+    lbImg.style.width = '';
+    lightbox.toggleAttribute('data-zoomed', !!scale);
+    lbImg.src = img.currentSrc || img.src;
+    lbImg.alt = img.alt;
+    if (lbImg.complete) lbImg.onload();
+    lightbox.classList.add('open');
+  };
+  const closeZoom = () => {
+    lightbox.classList.remove('open');
+    lightbox.removeAttribute('data-zoomed');
+    lbImg.onload = null;
+  };
+
+  function createProgress(){
+    const p = document.createElement('div'); p.id='progress'; stage.appendChild(p); return p;
+  }
+
+  let i = 0;
+  pageTot.textContent = String(slides.length).padStart(2,'0');
+
+  function fit(){
+    const sw = stage.offsetWidth, sh = stage.offsetHeight;
+    const scale = Math.min(window.innerWidth / sw, window.innerHeight / sh);
+    stage.style.transform = `scale(${scale})`;
+  }
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, idx) => {
+      if (idx === i) s.setAttribute('data-active','');
+      else s.removeAttribute('data-active');
+    });
+    const active = slides[i];
+    secLbl.textContent = active.dataset.section || '';
+    pageCur.textContent = String(i + 1).padStart(2,'0');
+    progress.style.width = ((i) / (slides.length - 1) * 100) + '%';
+    location.hash = 'slide-' + (i + 1);
+  }
+
+  const next = () => show(i + 1);
+  const prev = () => show(i - 1);
+
+  addEventListener('keydown', e => {
+    if (lightbox.classList.contains('open')) {
+      // nav keys close the zoom and move to the slide in one press; anything else just closes it
+      const nav = ['ArrowRight','ArrowLeft',' ','PageDown','PageUp','l','L','h','H','Home','End'];
+      closeZoom();
+      if (!nav.includes(e.key)) { e.preventDefault(); return; }
+      // fall through so the navigation case below runs
+    }
+    switch(e.key){
+      case 'ArrowRight': case ' ': case 'PageDown': case 'l': case 'L': next(); e.preventDefault(); break;
+      case 'ArrowLeft':  case 'PageUp':  case 'h': case 'H': prev(); e.preventDefault(); break;
+      case 'Home': show(0); break;
+      case 'End':  show(slides.length - 1); break;
+      case 'f': case 'F':
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+        break;
+      case '?': hint.style.opacity = hint.style.opacity === '1' ? '0' : '1'; break;
+    }
+  });
+
+  viewport.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    (e.clientX < window.innerWidth * 0.18) ? prev() : next();
+  });
+
+  // click a zoomable screenshot to open it in the lightbox; the figure swallows
+  // the click so the slide does not advance underneath.
+  document.querySelectorAll('.sc-shot.zoomable').forEach(fig => {
+    fig.addEventListener('click', e => { e.stopPropagation(); openZoom(fig.querySelector('img')); });
+  });
+  lightbox.addEventListener('click', closeZoom);
+
+  const fromHash = parseInt((location.hash.match(/slide-(\d+)/) || [])[1], 10);
+  addEventListener('resize', fit);
+  fit();
+  show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+
+  hint.style.opacity = '1';
+  setTimeout(() => { hint.style.opacity = '0'; }, 4200);
+})();
+</script>
+</body>
+</html>

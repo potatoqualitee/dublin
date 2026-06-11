@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Code Will Change Your Life For The Better, Chrissy LeMaire</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS  ·  Data Céilí green, sage, yellow, and soft conference wash
+   ============================================================ */
+:root{
+  --paper:    oklch(0.986 0.004 154);
+  --paper-2:  oklch(0.946 0.018 154);
+  --ink:      oklch(0.225 0.024 252);
+  --ink-soft: oklch(0.420 0.022 246);
+  --line:     oklch(0.660 0.058 148 / .46);
+  --accent:   oklch(0.655 0.165 154);
+  --accent-ink: oklch(0.455 0.130 154);
+  --sage:     oklch(0.515 0.072 146);
+  --sage-dark:oklch(0.385 0.058 146);
+  --yellow:   oklch(0.865 0.165 88);
+  --peach:    oklch(0.835 0.095 56);
+  --wash:     oklch(0.905 0.038 188);
+
+  --sans: "Archivo", system-ui, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, monospace;
+
+  --stage-w: 1280px;
+  --stage-h: 720px;
+  --margin: 84px;
+
+  --dur: 380ms;
+  --ease: cubic-bezier(.16,1,.3,1);
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{ height:100%; }
+body{
+  background: oklch(0.930 0.024 154);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+/* ============================================================
+   VIEWPORT  ·  centers the scaled stage on any screen
+   ============================================================ */
+#viewport{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(180deg, oklch(0.980 0.006 154) 0%, oklch(0.914 0.030 158) 100%);
+}
+
+#stage{
+  position: relative;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--paper) 94%, var(--wash)) 0%, var(--paper) 48%, color-mix(in oklch, var(--paper) 90%, var(--paper-2)) 100%);
+  color: var(--ink);
+  transform-origin: center center;
+  box-shadow: 0 1px 0 var(--line), 0 44px 84px -40px oklch(0.225 0.024 252 / .30);
+  overflow: hidden;
+}
+#stage::before{
+  content:"";
+  position:absolute;
+  left:0; right:0; bottom:0;
+  height:64px;
+  background:
+    linear-gradient(90deg,
+      color-mix(in oklch, var(--sage-dark) 75%, var(--paper)) 0%,
+      color-mix(in oklch, var(--wash) 72%, var(--yellow)) 48%,
+      color-mix(in oklch, var(--peach) 74%, var(--paper)) 100%);
+  opacity:.22;
+  z-index:0;
+  pointer-events:none;
+}
+
+/* ============================================================
+   PERSISTENT SPEC FRAME  ·  Swiss chrome around every slide
+   ============================================================ */
+.frame{ position:absolute; inset:0; pointer-events:none; z-index:5; }
+.frame .rule{ position:absolute; left:var(--margin); right:var(--margin); height:1px; background:var(--line); }
+.frame .rule.top{ top:68px; background:var(--sage); }
+.frame .rule.bottom{ bottom:54px; }
+.frame-logo{
+  position:absolute;
+  left:var(--margin);
+  top:16px;
+  width:150px;
+  height:auto;
+  filter: drop-shadow(0 4px 0 color-mix(in oklch, var(--yellow) 68%, transparent));
+}
+
+.frame .meta{
+  position:absolute;
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: .035em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.frame .meta.tl{ left:calc(var(--margin) + 178px); top:30px; }
+.frame .meta.tr{ right:var(--margin); top:30px; text-align:right; }
+.frame .meta.bl{ left:var(--margin); bottom:30px; }
+.frame .meta.br{ right:var(--margin); bottom:30px; text-align:right; }
+.frame .meta .dot{ color:var(--accent-ink); }
+
+#progress{
+  position:absolute; left:0; bottom:0; height:3px; width:0%;
+  background:linear-gradient(90deg, var(--sage-dark), var(--accent), var(--yellow), var(--peach)); z-index:6;
+  transition: width var(--dur) var(--ease);
+}
+
+/* ============================================================
+   SLIDES
+   ============================================================ */
+.slide{
+  position:absolute; inset:0;
+  padding: 96px var(--margin) 88px;
+  display:flex; flex-direction:column;
+  opacity:0; visibility:hidden;
+  z-index:1;
+  transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur);
+}
+.slide[data-active]{
+  opacity:1; visibility:visible;
+  transition: opacity var(--dur) var(--ease), visibility 0s;
+}
+
+/* entrance choreography: blocks rise + fade, staggered */
+.slide [data-reveal]{ opacity:0; transform: translateY(14px); }
+.slide[data-active] [data-reveal]{
+  opacity:1; transform:none;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  transition-delay: calc(var(--i, 0) * 70ms + 60ms);
+}
+
+/* ----- shared type ----- */
+.kicker{
+  font-family:var(--mono); font-size:15px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--accent-ink);
+}
+h1.title{
+  font-weight:700; line-height:.94; letter-spacing:-.025em;
+  font-size: 104px;
+  max-width:980px;
+}
+.title-tail{
+  display:inline-block;
+  align-self:flex-start;
+  margin-top:16px;
+  padding:8px 15px 9px;
+  border-left:6px solid var(--accent);
+  background:color-mix(in oklch, var(--yellow) 24%, var(--paper));
+  font-size:34px;
+  line-height:1;
+  font-weight:600;
+  color:var(--accent-ink);
+}
+.lede{ font-size:25px; line-height:1.5; color:var(--ink-soft); max-width:62ch; font-weight:400; }
+
+/* ===== title slide ===== */
+.brand-defs{ position:absolute; width:0; height:0; overflow:hidden; }
+.ceili-mark{
+  color:var(--accent-ink);
+  width:178px;
+  height:178px;
+  opacity:.30;
+  filter: drop-shadow(11px 10px 0 color-mix(in oklch, var(--yellow) 42%, transparent));
+  pointer-events:none;
+}
+.ceili-mark.title-mark{
+  position:absolute;
+  right:96px;
+  top:118px;
+  width:238px;
+  height:238px;
+  opacity:.16;
+}
+.s-title{ justify-content:center; }
+.s-title .lede{ margin-top:28px; }
+.s-title .event-line{
+  display:flex; flex-wrap:wrap; gap:10px 16px; align-items:center;
+  margin-top:30px;
+  font-family:var(--mono); font-size:14px; letter-spacing:.08em; text-transform:uppercase;
+  color:var(--sage-dark);
+}
+.s-title .event-line span{
+  border:1px solid color-mix(in oklch, var(--sage) 52%, transparent);
+  background:color-mix(in oklch, var(--yellow) 26%, var(--paper));
+  border-radius:999px;
+  padding:8px 13px;
+}
+.s-title .by{ margin-top:42px; display:flex; gap:16px; align-items:baseline; font-family:var(--mono); font-size:15px; color:var(--ink); letter-spacing:.02em; }
+.s-title .by .sep{ color:var(--line); }
+.s-title .by .mk{ color:var(--accent-ink); }
+
+/* ===== bio / who's talking ===== */
+.s-bio{ justify-content:center; }
+.s-bio .bio-name{ margin-top:16px; font-weight:700; letter-spacing:-.02em; line-height:.94; font-size:90px; }
+.s-bio .bio-creds{
+  list-style:none; display:flex; flex-wrap:wrap; align-items:center;
+  margin-top:32px; font-family:var(--mono); font-size:19px; color:var(--ink); letter-spacing:.01em;
+}
+.s-bio .bio-creds li{ display:inline-flex; align-items:center; }
+.s-bio .bio-creds li:not(:last-child)::after{ content:"·"; color:var(--accent-ink); margin:0 15px; }
+.s-bio .bio-line{ margin-top:34px; font-size:24px; line-height:1.45; color:var(--ink-soft); max-width:48ch; }
+
+/* ===== versus (browser chat vs on-machine agent) ===== */
+.s-versus{ flex-direction:column; padding-top:92px; }
+.s-versus .vs-title{ margin-top:10px; font-weight:700; letter-spacing:-.015em; line-height:1.08; font-size:46px; }
+.s-versus .vs-grid{
+  flex:1 1 auto; min-height:0; margin-top:46px;
+  display:grid; grid-template-columns:1fr 1fr;
+}
+.s-versus .vs-col{ display:flex; flex-direction:column; padding-right:56px; }
+.s-versus .vs-col + .vs-col{ padding-right:0; padding-left:56px; border-left:1px solid var(--line); }
+.s-versus .vs-where{ font-weight:700; letter-spacing:-.01em; line-height:1.02; font-size:34px; }
+.s-versus .vs-col.accent .vs-where{ color:var(--accent-ink); }
+.s-versus .vs-who{ margin-top:14px; font-family:var(--mono); font-size:18px; color:var(--ink-soft); letter-spacing:.01em; }
+.s-versus .vs-who .sep{ color:var(--accent-ink); margin:0 6px; }
+.s-versus .vs-desc{ margin-top:24px; font-size:22px; line-height:1.5; color:var(--ink-soft); max-width:32ch; }
+
+/* ===== showcase (screenshot-forward) ===== */
+.s-showcase{ flex-direction:column; padding-top:92px; }
+.sc-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:28px; }
+.sc-head .kicker{ display:block; margin-bottom:9px; }
+.sc-title{ font-weight:700; letter-spacing:-.015em; line-height:1.0; font-size:44px; }
+.sc-link{
+  font-family:var(--mono); font-size:19px; color:var(--accent-ink);
+  text-decoration:none; white-space:nowrap; letter-spacing:.01em; padding-bottom:4px;
+}
+.sc-link .arr{ color:var(--ink-soft); }
+.sc-link.muted{ color:var(--ink-soft); }
+.sc-note{ margin-top:14px; font-size:21px; line-height:1.45; color:var(--ink-soft); max-width:72ch; }
+.sc-shot{
+  position:relative; flex:1 1 auto; min-height:0; margin-top:22px;
+  border:1px solid var(--line); border-radius:5px; overflow:hidden;
+  background:var(--paper-2);
+  box-shadow: 0 22px 54px -30px oklch(0.225 0.024 252 / .44);
+}
+.sc-shot img{ width:100%; height:100%; object-fit:cover; object-position:top center; display:block; }
+.sc-shot.shot-center img{ object-position:center; }
+.sc-shot.shot-full img{ object-fit:contain; object-position:center; }
+/* full (uncropped) shots float on the paper: the frame chrome would otherwise
+   wrap the letterbox gaps and look broken. */
+.sc-shot.shot-full{ border-color:transparent; background:transparent; box-shadow:none; }
+.sc-shot.shot-full.linked:hover{ border-color:transparent; }
+/* clickable screenshots: open the real site in a new tab; clicks on the image
+   never advance the slide (the viewport handler ignores <a>). Arrows / clicks
+   on empty areas still navigate. */
+.sc-shot a{ position:absolute; inset:0; display:block; }
+.sc-shot.linked{ cursor:pointer; transition:border-color var(--dur) var(--ease); }
+.sc-shot.linked:hover{ border-color:var(--accent-ink); }
+.sc-shot.linked::after{
+  content:"open ↗"; position:absolute; top:12px; right:12px; z-index:3;
+  font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--paper); background:var(--accent-ink); padding:5px 10px; border-radius:4px;
+  opacity:0; transform:translateY(-4px);
+  transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  pointer-events:none;
+}
+.sc-shot.linked:hover::after{ opacity:1; transform:none; }
+/* zoomable screenshots: click opens a full-size lightbox instead of a link. */
+.sc-shot.zoomable{ cursor:zoom-in; }
+.sc-shot.zoomable::after{
+  content:"zoom ⤢"; position:absolute; top:12px; right:12px; z-index:3;
+  font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+  color:var(--paper); background:var(--accent-ink); padding:5px 10px; border-radius:4px;
+  opacity:0; transform:translateY(-4px);
+  transition:opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+  pointer-events:none;
+}
+.sc-shot.zoomable:hover::after{ opacity:1; transform:none; }
+/* click-to-zoom lightbox. Lives outside #stage so it ignores the slide scaling. */
+#lightbox{
+  position:fixed; inset:0; z-index:1000; display:grid; place-items:center; padding:5vmin;
+  background:oklch(0.18 0.020 246 / .82); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  opacity:0; pointer-events:none; cursor:zoom-out; transition:opacity .28s var(--ease);
+}
+#lightbox.open{ opacity:1; pointer-events:auto; }
+#lightbox img{
+  max-width:94vw; max-height:92vh; display:block; border-radius:8px;
+  box-shadow:0 40px 120px -28px oklch(0.12 0.01 60 / .82);
+  transform:scale(.93); transition:transform .34s cubic-bezier(.2,.75,.2,1);
+}
+#lightbox[data-zoomed]{
+  overflow:auto;
+}
+#lightbox[data-zoomed] img{
+  max-width:none; max-height:none;
+}
+#lightbox.open img{ transform:scale(1); }
+#lightbox .lb-hint{
+  position:fixed; top:22px; right:26px; font-family:var(--mono); font-size:12px;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--paper); opacity:.65;
+}
+.sc-shot.placeholder{
+  border-style:dashed;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 11px, color-mix(in oklch,var(--line) 45%,transparent) 11px 12px);
+  box-shadow:none;
+}
+.sc-shot:not(.placeholder) .sc-ph{ display:none; }
+.sc-ph{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:13px; letter-spacing:.07em; text-transform:uppercase;
+  color:var(--ink-soft); text-align:center; padding:0 24px;
+}
+
+/* ===== closing act: the downside, the fix, hooks, sign-off ===== */
+.s-list{ flex-direction:column; padding-top:92px; }
+.s-list .body{ margin-top:34px; flex:1 1 auto; min-height:0; display:flex; flex-direction:column; gap:34px; justify-content:center; }
+.fix-row .fix-label{ font-family:var(--mono); font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink); }
+.fix-row .fix-line{ margin-top:14px; font-size:23px; line-height:1.45; color:var(--ink); max-width:62ch; }
+.chips{ margin-top:16px; display:flex; flex-wrap:wrap; gap:10px; }
+.chips .chip{
+  font-family:var(--mono); font-size:17px; color:var(--ink);
+  border:1px solid color-mix(in oklch, var(--sage) 46%, var(--line));
+  border-radius:999px;
+  padding:8px 13px;
+  background:color-mix(in oklch, var(--yellow) 18%, var(--paper));
+}
+.hooks{
+  margin-top:30px; flex:1 1 auto; min-height:0;
+  display:grid; grid-template-rows:repeat(5,auto); grid-auto-flow:column;
+  grid-template-columns:1fr 1fr; gap:0 44px; align-content:center;
+}
+.hooks .hook{ display:flex; gap:16px; align-items:baseline; padding:11px 0; border-bottom:1px solid color-mix(in oklch, var(--line) 78%, transparent); }
+.hooks .hook .hk{ font-family:var(--mono); font-size:15px; color:var(--accent-ink); white-space:nowrap; min-width:9.5em; }
+.hooks .hook .hd{ font-size:17px; line-height:1.3; color:var(--ink-soft); }
+.hooks .hook.meta .hd{ color:var(--ink); }
+.s-hook-intro{ justify-content:center; }
+.s-hook-intro .hook-wrap{
+  display:grid; grid-template-columns:420px minmax(0,1fr); gap:54px;
+  align-items:center;
+}
+.s-hook-intro .hook-title{
+  margin-top:16px;
+  font-weight:800; line-height:.95; letter-spacing:-.035em;
+  font-size:72px; color:var(--ink);
+}
+.s-hook-intro .hook-note{
+  margin-top:26px; font-size:25px; line-height:1.42; color:var(--ink-soft); max-width:17ch;
+}
+.s-hook-intro .hook-note .mk{ color:var(--accent-ink); }
+.control-stack{
+  display:grid; gap:14px;
+}
+.control-card{
+  position:relative;
+  border:1px solid color-mix(in oklch, var(--sage) 45%, var(--line));
+  border-radius:8px;
+  background:color-mix(in oklch, var(--paper) 76%, var(--paper-2));
+  padding:22px 24px 22px 26px;
+  box-shadow:12px 12px 0 color-mix(in oklch, var(--yellow) 18%, transparent);
+}
+.control-card::before{
+  content:"";
+  position:absolute; left:0; top:18px; bottom:18px; width:5px;
+  background:var(--accent);
+}
+.control-top{
+  display:flex; align-items:baseline; justify-content:space-between; gap:24px;
+}
+.control-name{
+  font-family:var(--mono); font-size:18px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--accent-ink);
+}
+.control-tag{
+  font-family:var(--mono); font-size:13px; letter-spacing:.04em;
+  color:var(--ink-soft); text-align:right;
+}
+.control-card p{
+  margin-top:12px; font-size:22px; line-height:1.3; color:var(--ink);
+}
+.control-examples{
+  margin-top:13px; display:flex; flex-wrap:wrap; gap:8px;
+}
+.control-examples span{
+  font-family:var(--mono); font-size:13px; color:var(--ink-soft);
+  border:1px solid color-mix(in oklch, var(--line) 72%, transparent);
+  border-radius:999px; padding:5px 9px;
+  background:color-mix(in oklch, var(--paper) 82%, var(--wash));
+}
+.s-close{ justify-content:center; }
+.s-close .lede-xl{ font-weight:700; letter-spacing:-.018em; line-height:1.12; font-size:50px; }
+.s-close .close-note{ margin-top:30px; font-size:24px; line-height:1.5; color:var(--ink-soft); max-width:52ch; }
+.s-close .close-note .mk{ color:var(--accent-ink); }
+.s-skills{ flex-direction:column; padding-top:92px; }
+.skill-grid{
+  margin-top:28px; display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:18px;
+  flex:1 1 auto; min-height:0; align-items:stretch;
+}
+.skill-card{
+  border:1px solid color-mix(in oklch, var(--sage) 42%, var(--line));
+  border-radius:8px; background:color-mix(in oklch, var(--paper) 74%, var(--paper-2));
+  padding:20px; display:flex; flex-direction:column; min-height:0;
+}
+.skill-card h3{ font-size:30px; line-height:1; letter-spacing:-.015em; font-weight:700; }
+.skill-card .repo{
+  margin-top:10px; font-family:var(--mono); font-size:12px; letter-spacing:.01em; color:var(--accent-ink);
+}
+.skill-card .repo a{ color:inherit; text-decoration:none; border-bottom:1px solid color-mix(in oklch, var(--accent-ink) 45%, transparent); }
+.skill-card p{ margin-top:16px; font-size:17px; line-height:1.36; color:var(--ink-soft); }
+.skill-mini{
+  margin-top:auto; border:1px solid var(--line); border-radius:7px; background:var(--paper);
+  padding:13px; display:grid; gap:9px;
+}
+.skill-row{ display:grid; grid-template-columns:76px 1fr; gap:10px; align-items:center; font-family:var(--mono); font-size:11px; color:var(--ink-soft); }
+.skill-bar{ height:8px; border-radius:999px; background:color-mix(in oklch, var(--line) 38%, var(--paper-2)); overflow:hidden; }
+.skill-bar span{ display:block; height:100%; background:linear-gradient(90deg,var(--sage-dark),var(--accent),var(--yellow)); }
+.before-after{ margin-top:auto; display:grid; gap:9px; }
+.text-sample{ border:1px solid var(--line); border-radius:7px; padding:12px 14px; font-size:16px; line-height:1.35; color:var(--ink-soft); background:var(--paper); }
+.text-sample.after{ color:var(--ink); border-color:color-mix(in oklch, var(--accent-ink) 45%, var(--line)); background:color-mix(in oklch, var(--accent) 10%, var(--paper)); }
+.s-rainbow{ justify-content:center; align-items:center; text-align:center; }
+.s-rainbow .rainbow-wrap{ width:600px; max-width:80%; }
+.s-rainbow svg.rainbow{ width:100%; height:auto; display:block; overflow:visible;
+  filter:drop-shadow(0 18px 26px oklch(0.225 0.024 252 / .16)); }
+/* arcs draw themselves in left-to-right when the slide lands */
+.s-rainbow .rainbow path{ stroke-dasharray:100; stroke-dashoffset:100; transition:stroke-dashoffset 1.05s var(--ease); }
+.s-rainbow[data-active] .rainbow path{ stroke-dashoffset:0; }
+.s-rainbow .rainbow path:nth-child(1){ transition-delay:.12s; }
+.s-rainbow .rainbow path:nth-child(2){ transition-delay:.19s; }
+.s-rainbow .rainbow path:nth-child(3){ transition-delay:.26s; }
+.s-rainbow .rainbow path:nth-child(4){ transition-delay:.33s; }
+.s-rainbow .rainbow path:nth-child(5){ transition-delay:.40s; }
+.s-rainbow .rainbow path:nth-child(6){ transition-delay:.47s; }
+.s-rainbow .rainbow path:nth-child(7){ transition-delay:.54s; }
+.s-rainbow .rainbow-line{ margin-top:20px; font-weight:700; letter-spacing:-.02em; line-height:1.06; font-size:58px; }
+
+/* ============================================================
+   HELP / HINT
+   ============================================================ */
+#hint{
+  position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--ink-soft);
+  background:color-mix(in oklch, var(--paper) 86%, transparent);
+  border:1px solid var(--line); border-radius:999px; padding:7px 16px;
+  z-index:20; transition:opacity .5s var(--ease); pointer-events:none;
+}
+#hint kbd{
+  font-family:var(--mono); background:var(--paper-2); border:1px solid var(--line);
+  border-radius:4px; padding:1px 6px; color:var(--ink); margin:0 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slide, .slide[data-active] [data-reveal], #progress{ transition:none !important; }
+  .slide [data-reveal]{ opacity:1; transform:none; }
+}
+</style>
+</head>
+
+<body>
+<div id="viewport">
+  <div id="stage">
+    <svg class="brand-defs" aria-hidden="true" focusable="false">
+      <defs>
+        <symbol id="ceili-icon" viewBox="0 0 160 160">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="80" cy="80" r="62" stroke="currentColor" stroke-width="5"/>
+            <g stroke="currentColor" stroke-width="7">
+              <path d="M80 31 C96 47 111 47 128 31 C113 67 113 93 128 129 C92 113 68 113 32 129 C47 93 47 67 32 31 C49 47 64 47 80 31Z"/>
+              <path d="M52 52 C66 66 66 94 52 108"/>
+              <path d="M108 52 C94 66 94 94 108 108"/>
+              <path d="M52 52 C66 66 94 66 108 52"/>
+              <path d="M52 108 C66 94 94 94 108 108"/>
+            </g>
+            <g stroke="var(--paper)" stroke-width="9">
+              <path d="M76 36 C80 47 80 55 80 63"/>
+              <path d="M124 76 C113 80 105 80 97 80"/>
+              <path d="M84 124 C80 113 80 105 80 97"/>
+              <path d="M36 84 C47 80 55 80 63 80"/>
+            </g>
+            <g stroke="currentColor" stroke-width="7">
+              <path d="M76 36 C80 47 80 55 80 63"/>
+              <path d="M124 76 C113 80 105 80 97 80"/>
+              <path d="M84 124 C80 113 80 105 80 97"/>
+              <path d="M36 84 C47 80 55 80 63 80"/>
+            </g>
+          </g>
+        </symbol>
+      </defs>
+    </svg>
+
+    <!-- persistent spec frame (shared chrome) -->
+    <div class="frame" aria-hidden="true">
+      <div class="rule top"></div>
+      <div class="rule bottom"></div>
+      <img class="frame-logo" src="logo.png" alt="">
+      <div class="meta tl">Data Céilí 2026</div>
+      <div class="meta tr">Chrissy LeMaire <span class="dot">·</span> Trinity College Dublin</div>
+      <div class="meta bl" id="section-label">§00 / cold open</div>
+      <div class="meta br"><span id="page-cur">01</span> / <span id="page-total">31</span></div>
+    </div>
+
+    <!-- ===================== SLIDE 1 · TITLE ===================== -->
+    <section class="slide s-title" data-section="§00 / cold open">
+      <svg class="ceili-mark title-mark" aria-hidden="true"><use href="#knot"></use></svg>
+      <h1 class="title" data-reveal style="--i:0">CLAUDE CODE</h1>
+      <span class="title-tail" data-reveal style="--i:1">will change your life</span>
+      <p class="lede" data-reveal style="--i:2">I haven't written a line of code in months.</p>
+      <div class="event-line" data-reveal style="--i:3">
+        <span>Data Céilí 2026</span>
+        <span>Trinity College Dublin</span>
+        <span>12 June</span>
+      </div>
+      <div class="by" data-reveal style="--i:4"><span>Chrissy LeMaire</span><span class="sep">/</span><span class="mk">five-minute lightning cut</span></div>
+    </section>
+
+    <!-- ===================== SLIDE 2 · WHO'S TALKING ===================== -->
+    <section class="slide s-bio" data-section="§00 / who's talking">
+      <span class="kicker" data-reveal style="--i:0">Who's talking</span>
+      <h2 class="bio-name" data-reveal style="--i:1">Chrissy LeMaire</h2>
+      <ul class="bio-creds" data-reveal style="--i:2">
+        <li>Microsoft MVP</li>
+        <li>GitHub Star</li>
+        <li>Manning author</li>
+        <li>creator of dbatools</li>
+      </ul>
+      <p class="bio-line" data-reveal style="--i:3">I build tools to make myself faster. This one got addictive.</p>
+    </section>
+
+    <!-- ===================== SLIDE 3 · BROWSER vs COMPUTER ===================== -->
+    <section class="slide s-versus" data-section="§01 / the shift">
+      <span class="kicker" data-reveal style="--i:0">Know the difference</span>
+      <h2 class="vs-title" data-reveal style="--i:1">One lives in a tab.<br>One lives on your machine.</h2>
+      <div class="vs-grid">
+        <div class="vs-col" data-reveal style="--i:2">
+          <h3 class="vs-where">Browser chat</h3>
+          <p class="vs-who">claude.ai <span class="sep">/</span> chatgpt.com <span class="sep">/</span> gemini.google</p>
+          <p class="vs-desc">Great at words. Bad at your repo, your shell, your files, and all the local mess where work actually happens.</p>
+        </div>
+        <div class="vs-col accent" data-reveal style="--i:3">
+          <h3 class="vs-where">Local agent</h3>
+          <p class="vs-who">Claude Code <span class="sep">/</span> Codex <span class="sep">/</span> Gemini CLI</p>
+          <p class="vs-desc">Reads the project. Runs commands. Edits files. Leaves receipts. That is the shift.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 4 · THE LAB (MACHINE ACCESS) ===================== -->
+    <section class="slide s-showcase" data-section="§01 / the shift">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Machine access</span>
+          <h2 class="sc-title" data-reveal style="--i:1">It mapped my whole network</h2>
+        </div>
+        <a class="sc-link" href="https://blog.netnerds.net/lab" target="_blank" rel="noopener" data-reveal style="--i:2">blog.netnerds.net/lab <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">I said: map it. Claude found the VMs, SQL instances, subnets, and SSH tunnel, then made the diagram I needed.</p>
+      <figure class="sc-shot linked" data-reveal style="--i:3">
+        <span class="sc-ph">drop references/shot-lab.png to show the network map</span>
+        <img src="references/shot-lab.png" alt="Claude Code generated a network map of Chrissy's lab" onload="this.closest('.sc-shot').classList.remove('placeholder')" onerror="this.closest('.sc-shot').classList.add('placeholder'); this.remove()">
+        <a href="https://blog.netnerds.net/lab" target="_blank" rel="noopener" aria-label="Open the lab post"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 5 · dbatools.io ===================== -->
+    <section class="slide s-showcase" data-section="§02 / proof">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Rebuilt</span>
+          <h2 class="sc-title" data-reveal style="--i:1">dbatools.io, in a day</h2>
+        </div>
+        <a class="sc-link" href="https://dbatools.io" target="_blank" rel="noopener" data-reveal style="--i:2">dbatools.io <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Old HTML in. Dark mode, docs, and a getting-started guide out. The boring migration finally happened.</p>
+      <figure class="sc-shot linked" data-reveal style="--i:3">
+        <img src="references/shot-dbatools.png" alt="The rebuilt dbatools.io website">
+        <a href="https://dbatools.io" target="_blank" rel="noopener" aria-label="Open dbatools.io"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 6 · realcajunrecipes.com ===================== -->
+    <section class="slide s-showcase" data-section="§02 / proof">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Moved</span>
+          <h2 class="sc-title" data-reveal style="--i:1">realcajunrecipes.com</h2>
+        </div>
+        <a class="sc-link" href="https://realcajunrecipes.com" target="_blank" rel="noopener" data-reveal style="--i:2">realcajunrecipes.com <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Twenty years of recipes, off WordPress, now static and boring. Then the dream feature: French French at scale.</p>
+      <figure class="sc-shot linked" data-reveal style="--i:3">
+        <img src="references/shot-realcajunrecipes.png" alt="The rebuilt Real Cajun Recipes website">
+        <a href="https://realcajunrecipes.com" target="_blank" rel="noopener" aria-label="Open Real Cajun Recipes"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 7 · BLOG MAINTENANCE ===================== -->
+    <section class="slide s-showcase" data-section="§02 / proof">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Maintenance</span>
+          <h2 class="sc-title" data-reveal style="--i:1">100+ posts, one prompt</h2>
+        </div>
+        <a class="sc-link" href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener" data-reveal style="--i:2">prompt <span class="arr">↗</span></a>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">Not content generation. Maintenance. Links, screenshots, commands, embeds. The work that always loses to everything else.</p>
+      <figure class="sc-shot linked" data-reveal style="--i:3">
+        <img src="references/ai-cli-blog.png" alt="A blog maintenance prompt for refreshing more than 100 old posts">
+        <a href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener" aria-label="Open the blog refresh prompt"></a>
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 8 · CONTROL SURFACES ===================== -->
+    <section class="slide s-hook-intro" data-section="§03 / guardrails">
+      <div class="hook-wrap">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">The honest part</span>
+          <h2 class="hook-title" data-reveal style="--i:1">Let it run.<br>Make it answer.</h2>
+          <p class="hook-note" data-reveal style="--i:2">The speed only works with <span class="mk">policy, context, and receipts</span>.</p>
+        </div>
+        <div class="control-stack">
+          <div class="control-card" data-reveal style="--i:2">
+            <div class="control-top"><span class="control-name">Hooks</span><span class="control-tag">before it writes</span></div>
+            <p>Block bad moves before they land in the repo.</p>
+            <div class="control-examples"><span>read first</span><span>file size cop</span><span>stop gate</span></div>
+          </div>
+          <div class="control-card" data-reveal style="--i:3">
+            <div class="control-top"><span class="control-name">Skills</span><span class="control-tag">when taste matters</span></div>
+            <p>Load the right rules only when the task needs them.</p>
+            <div class="control-examples"><span>design</span><span>voice</span><span>dbatools</span></div>
+          </div>
+          <div class="control-card" data-reveal style="--i:4">
+            <div class="control-top"><span class="control-name">Commands</span><span class="control-tag">same playbook</span></div>
+            <p>Turn repeat work into checklists with evidence at the end.</p>
+            <div class="control-examples"><span>/ralph</span><span>verify</span><span>handoff</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 9 · THE MITIGATION ===================== -->
+    <section class="slide s-list" data-section="§03 / guardrails">
+      <span class="kicker" data-reveal style="--i:0">Bring the old guards back</span>
+      <h2 class="sc-title" data-reveal style="--i:1">The agent proposes.<br>A person merges.</h2>
+      <p class="sc-note" data-reveal style="--i:1">Scanners on the outside. Hooks on the inside. A human at the merge.</p>
+      <div class="body">
+        <div class="fix-row" data-reveal style="--i:2">
+          <p class="fix-label">Classic scanners, every PR</p>
+          <div class="chips">
+            <span class="chip">CodeQL</span>
+            <span class="chip">Dependabot</span>
+            <span class="chip">Gitleaks</span>
+            <span class="chip">Semgrep</span>
+            <span class="chip">Trivy</span>
+          </div>
+        </div>
+        <div class="fix-row" data-reveal style="--i:3">
+          <p class="fix-label">Agent tripwires</p>
+          <div class="chips">
+            <span class="chip">read-before-edit</span>
+            <span class="chip">tests-must-cover</span>
+            <span class="chip">command rewriter</span>
+            <span class="chip">stop gate</span>
+            <span class="chip">file size cop</span>
+          </div>
+        </div>
+        <div class="fix-row" data-reveal style="--i:4">
+          <p class="fix-label">Ownership stays human</p>
+          <p class="fix-line">Nothing ships on the agent's word alone.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 10 · RAINBOW FINALE ===================== -->
+    <section class="slide s-rainbow" data-section="§04 / closing">
+      <div class="rainbow-wrap" data-reveal style="--i:0">
+        <svg class="rainbow" viewBox="0 0 400 200" role="img" aria-label="A rainbow">
+          <g fill="none" stroke-width="13">
+            <path pathLength="100" d="M20 190 A180 180 0 0 1 380 190" stroke="#E5484D"/>
+            <path pathLength="100" d="M36 190 A164 164 0 0 1 364 190" stroke="#F76B15"/>
+            <path pathLength="100" d="M52 190 A148 148 0 0 1 348 190" stroke="#FFC53D"/>
+            <path pathLength="100" d="M68 190 A132 132 0 0 1 332 190" stroke="#46A758"/>
+            <path pathLength="100" d="M84 190 A116 116 0 0 1 316 190" stroke="#3E63DD"/>
+            <path pathLength="100" d="M100 190 A100 100 0 0 1 300 190" stroke="#6E56CF"/>
+            <path pathLength="100" d="M116 190 A84 84 0 0 1 284 190" stroke="#AB4ABA"/>
+          </g>
+        </svg>
+      </div>
+      <h2 class="rainbow-line" data-reveal style="--i:1">I get to build<br>anything I want now.</h2>
+    </section>
+  </div>
+</div>
+
+<div id="hint"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; <kbd>F</kbd> fullscreen &nbsp;·&nbsp; <kbd>?</kbd> help</div>
+
+<div id="lightbox" aria-hidden="true">
+  <span class="lb-hint">esc / click to close</span>
+  <img alt="">
+</div>
+
+<script>
+(() => {
+  const stage   = document.getElementById('stage');
+  const viewport= document.getElementById('viewport');
+  const slides  = [...document.querySelectorAll('.slide')];
+  const progress= document.getElementById('progress-bar') || createProgress();
+  const pageCur = document.getElementById('page-cur');
+  const pageTot = document.getElementById('page-total');
+  const secLbl  = document.getElementById('section-label');
+  const hint    = document.getElementById('hint');
+  const lightbox= document.getElementById('lightbox');
+  const lbImg   = lightbox.querySelector('img');
+  const openZoom  = img => {
+    const scale = parseFloat(img.closest('.sc-shot')?.dataset.zoom || '');
+    lbImg.onload = () => {
+      if (scale && lbImg.naturalWidth) lbImg.style.width = Math.round(lbImg.naturalWidth * scale) + 'px';
+    };
+    lbImg.style.width = '';
+    lightbox.toggleAttribute('data-zoomed', !!scale);
+    lbImg.src = img.currentSrc || img.src;
+    lbImg.alt = img.alt;
+    if (lbImg.complete) lbImg.onload();
+    lightbox.classList.add('open');
+  };
+  const closeZoom = () => {
+    lightbox.classList.remove('open');
+    lightbox.removeAttribute('data-zoomed');
+    lbImg.onload = null;
+  };
+
+  function createProgress(){
+    const p = document.createElement('div'); p.id='progress'; stage.appendChild(p); return p;
+  }
+
+  let i = 0;
+  pageTot.textContent = String(slides.length).padStart(2,'0');
+
+  function fit(){
+    const sw = stage.offsetWidth, sh = stage.offsetHeight;
+    const scale = Math.min(window.innerWidth / sw, window.innerHeight / sh);
+    stage.style.transform = `scale(${scale})`;
+  }
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, idx) => {
+      if (idx === i) s.setAttribute('data-active','');
+      else s.removeAttribute('data-active');
+    });
+    const active = slides[i];
+    secLbl.textContent = active.dataset.section || '';
+    pageCur.textContent = String(i + 1).padStart(2,'0');
+    progress.style.width = ((i) / (slides.length - 1) * 100) + '%';
+    location.hash = 'slide-' + (i + 1);
+  }
+
+  const next = () => show(i + 1);
+  const prev = () => show(i - 1);
+
+  addEventListener('keydown', e => {
+    if (lightbox.classList.contains('open')) {
+      // nav keys close the zoom and move to the slide in one press; anything else just closes it
+      const nav = ['ArrowRight','ArrowLeft',' ','PageDown','PageUp','l','L','h','H','Home','End'];
+      closeZoom();
+      if (!nav.includes(e.key)) { e.preventDefault(); return; }
+      // fall through so the navigation case below runs
+    }
+    switch(e.key){
+      case 'ArrowRight': case ' ': case 'PageDown': case 'l': case 'L': next(); e.preventDefault(); break;
+      case 'ArrowLeft':  case 'PageUp':  case 'h': case 'H': prev(); e.preventDefault(); break;
+      case 'Home': show(0); break;
+      case 'End':  show(slides.length - 1); break;
+      case 'f': case 'F':
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+        break;
+      case '?': hint.style.opacity = hint.style.opacity === '1' ? '0' : '1'; break;
+    }
+  });
+
+  viewport.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    (e.clientX < window.innerWidth * 0.18) ? prev() : next();
+  });
+
+  // click a zoomable screenshot to open it in the lightbox; the figure swallows
+  // the click so the slide does not advance underneath.
+  document.querySelectorAll('.sc-shot.zoomable').forEach(fig => {
+    fig.addEventListener('click', e => { e.stopPropagation(); openZoom(fig.querySelector('img')); });
+  });
+  lightbox.addEventListener('click', closeZoom);
+
+  const fromHash = parseInt((location.hash.match(/slide-(\d+)/) || [])[1], 10);
+  addEventListener('resize', fit);
+  fit();
+  show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+
+  hint.style.opacity = '1';
+  setTimeout(() => { hint.style.opacity = '0'; }, 4200);
+})();
+</script>
+</body>
+</html>

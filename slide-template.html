@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Claude Code Will Change Your Life For The Better — Chrissy LeMaire</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500;600;700;800&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   TOKENS  ·  warm cream paper, warm ink, one cayenne accent
+   ============================================================ */
+:root{
+  --paper:    oklch(0.972 0.007 78);
+  --paper-2:  oklch(0.945 0.009 78);
+  --ink:      oklch(0.215 0.014 60);
+  --ink-soft: oklch(0.410 0.013 60);
+  --line:     oklch(0.860 0.010 72);
+  --accent:   oklch(0.605 0.197 33);
+  --accent-ink: oklch(0.500 0.170 33);
+
+  --sans: "Archivo", system-ui, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, monospace;
+
+  /* stage is authored at a fixed 1280x720; everything reasons in stage px */
+  --stage-w: 1280px;
+  --stage-h: 720px;
+  --margin: 84px;
+
+  --dur: 380ms;
+  --ease: cubic-bezier(.16,1,.3,1); /* ease-out-expo-ish */
+}
+
+*{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{ height:100%; }
+body{
+  background: var(--paper-2);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+}
+
+/* ============================================================
+   VIEWPORT  ·  centers the scaled stage on any screen
+   ============================================================ */
+#viewport{
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(120% 120% at 50% 0%, var(--paper) 0%, var(--paper-2) 100%);
+}
+
+#stage{
+  position: relative;
+  width: var(--stage-w);
+  height: var(--stage-h);
+  background: var(--paper);
+  color: var(--ink);
+  transform-origin: center center;
+  box-shadow: 0 1px 0 var(--line), 0 40px 80px -40px oklch(0.215 0.014 60 / .28);
+  overflow: hidden;
+}
+
+/* ============================================================
+   PERSISTENT SPEC FRAME  ·  Swiss chrome around every slide
+   ============================================================ */
+.frame{ position:absolute; inset:0; pointer-events:none; z-index:5; }
+.frame .rule{ position:absolute; left:var(--margin); right:var(--margin); height:1px; background:var(--line); }
+.frame .rule.top{ top:54px; }
+.frame .rule.bottom{ bottom:54px; }
+
+.frame .meta{
+  position:absolute;
+  font-family: var(--mono);
+  font-size: 15px;
+  letter-spacing: .035em;
+  color: var(--ink-soft);
+  text-transform: uppercase;
+}
+.frame .meta.tl{ left:var(--margin); top:30px; }
+.frame .meta.tr{ right:var(--margin); top:30px; text-align:right; }
+.frame .meta.bl{ left:var(--margin); bottom:30px; }
+.frame .meta.br{ right:var(--margin); bottom:30px; text-align:right; }
+.frame .meta .dot{ color:var(--accent-ink); }
+
+/* progress bar hugging the very bottom edge */
+#progress{
+  position:absolute; left:0; bottom:0; height:3px; width:0%;
+  background:var(--accent); z-index:6;
+  transition: width var(--dur) var(--ease);
+}
+
+/* ============================================================
+   SLIDES
+   ============================================================ */
+.slide{
+  position:absolute; inset:0;
+  padding: 96px var(--margin) 88px;
+  display:flex; flex-direction:column;
+  opacity:0; visibility:hidden;
+  transition: opacity var(--dur) var(--ease), visibility 0s linear var(--dur);
+}
+.slide[data-active]{
+  opacity:1; visibility:visible;
+  transition: opacity var(--dur) var(--ease), visibility 0s;
+}
+
+/* entrance choreography: blocks rise + fade, staggered */
+.slide [data-reveal]{
+  opacity:0; transform: translateY(14px);
+}
+.slide[data-active] [data-reveal]{
+  opacity:1; transform:none;
+  transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
+}
+.slide[data-active] [data-reveal]{ transition-delay: calc(var(--i, 0) * 70ms + 60ms); }
+
+/* ----- shared type ----- */
+.kicker{
+  font-family:var(--mono); font-size:15px; letter-spacing:.13em;
+  text-transform:uppercase; color:var(--accent-ink);
+}
+.eyebrow{
+  font-family:var(--mono); font-size:15px; letter-spacing:.09em;
+  text-transform:uppercase; color:var(--ink-soft);
+}
+h1.title{
+  font-weight:700; line-height:.98; letter-spacing:-.02em;
+  font-size: clamp(56px, 7.2vw, 92px); /* clamp is harmless inside fixed stage */
+}
+h2.head{
+  font-weight:700; line-height:1.02; letter-spacing:-.015em;
+  font-size: 58px;
+}
+.statement{
+  font-weight:600; line-height:1.06; letter-spacing:-.015em;
+  font-size: 72px; max-width: 18ch;
+}
+.statement em{ color:var(--accent-ink); font-style:normal; }
+.lede{ font-size:25px; line-height:1.5; color:var(--ink-soft); max-width:62ch; font-weight:400; }
+.spacer{ flex:1 1 auto; }
+
+/* ----- placeholder primitives (design scaffolding) ----- */
+.ph{
+  --ph-line: color-mix(in oklch, var(--line) 70%, transparent);
+  border:1px dashed var(--line);
+  border-radius:2px;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 11px, color-mix(in oklch,var(--line) 40%,transparent) 11px 12px);
+  color:var(--ink-soft);
+  font-family:var(--mono); font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+  display:flex; align-items:center; justify-content:center;
+}
+.ph.solid{ background:var(--paper-2); border-style:solid; }
+
+/* ===== title slide ===== */
+.s-title{ justify-content:center; }
+.s-title .lede{ margin-top:28px; }
+.s-title .by{ margin-top:40px; display:flex; gap:16px; align-items:baseline; font-family:var(--mono); font-size:15px; color:var(--ink); letter-spacing:.02em; }
+.s-title .by .sep{ color:var(--line); }
+
+/* ===== section divider ===== */
+.s-section{ justify-content:flex-end; }
+.s-section .num{ font-family:var(--mono); font-size:20px; color:var(--accent-ink); letter-spacing:.08em; }
+.s-section h2{ margin-top:14px; font-size:84px; font-weight:700; letter-spacing:-.02em; line-height:.98; }
+
+/* ===== statement slide ===== */
+.s-statement{ justify-content:center; }
+
+/* ===== content grid ===== */
+.s-content .grid{
+  margin-top:auto; display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
+}
+.s-content .cell{ display:flex; flex-direction:column; gap:12px; }
+.s-content .cell .n{ font-family:var(--mono); font-size:14px; color:var(--accent-ink); }
+.s-content .cell .ph{ height:130px; }
+.s-content .cell p{ font-size:19px; line-height:1.45; color:var(--ink); }
+
+/* ===== showcase (artifact / screenshot) ===== */
+.s-showcase{ flex-direction:row; gap:56px; align-items:stretch; padding-top:104px; }
+.s-showcase .col{ flex:0 0 360px; display:flex; flex-direction:column; }
+.s-showcase .col .lede{ margin-top:20px; font-size:20px; }
+.s-showcase .stagebox{ flex:1; }
+.s-showcase .ph.shot{ height:100%; font-size:13px; }
+
+/* ===== compare (AI CLI table) ===== */
+.s-compare table{ width:100%; margin-top:auto; border-collapse:collapse; }
+.s-compare th, .s-compare td{ text-align:left; padding:18px 16px; border-bottom:1px solid var(--line); font-size:20px; }
+.s-compare thead th{
+  font-family:var(--mono); font-size:14.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-soft); border-bottom:1px solid var(--ink); padding-bottom:12px;
+}
+.s-compare tbody th{ font-weight:600; color:var(--ink); }
+.s-compare td{ color:var(--ink-soft); }
+.s-compare .mk{ color:var(--accent-ink); font-family:var(--mono); }
+
+/* ===== closing ===== */
+.s-closing{ justify-content:center; }
+.s-closing .links{ margin-top:36px; display:flex; flex-direction:column; gap:10px; font-family:var(--mono); font-size:19px; }
+.s-closing .links a{ color:var(--ink); text-decoration:none; }
+.s-closing .links .at{ color:var(--accent-ink); }
+
+/* ============================================================
+   HELP / HINT
+   ============================================================ */
+#hint{
+  position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:12px; letter-spacing:.06em; color:var(--ink-soft);
+  background:color-mix(in oklch, var(--paper) 86%, transparent);
+  border:1px solid var(--line); border-radius:999px; padding:7px 16px;
+  z-index:20; transition:opacity .5s var(--ease); pointer-events:none;
+}
+#hint kbd{
+  font-family:var(--mono); background:var(--paper-2); border:1px solid var(--line);
+  border-radius:4px; padding:1px 6px; color:var(--ink); margin:0 2px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .slide, .slide[data-active] [data-reveal], #progress{ transition:none !important; }
+  .slide [data-reveal]{ opacity:1; transform:none; }
+}
+</style>
+</head>
+
+<body>
+<div id="viewport">
+  <div id="stage">
+
+    <!-- persistent spec frame (shared chrome) -->
+    <div class="frame" aria-hidden="true">
+      <div class="rule top"></div>
+      <div class="rule bottom"></div>
+      <div class="meta tl">Chrissy LeMaire</div>
+      <div class="meta tr">Dublin <span class="dot">·</span> 2026</div>
+      <div class="meta bl" id="section-label">§00 — cold open</div>
+      <div class="meta br"><span id="page-cur">01</span> / <span id="page-total">07</span></div>
+    </div>
+
+    <!-- ===================== SLIDE 1 · TITLE ===================== -->
+    <section class="slide s-title" data-section="§00 — cold open">
+      <p class="kicker" data-reveal style="--i:0">Claude Code</p>
+      <h1 class="title" data-reveal style="--i:1">Will Change<br>Your Life<br>For The Better</h1>
+      <p class="lede" data-reveal style="--i:2">[ one-line promise / hook goes here ]</p>
+      <div class="by" data-reveal style="--i:3">
+        <span>Chrissy LeMaire</span><span class="sep">/</span>
+        <span>Dublin 2026</span><span class="sep">/</span>
+        <span class="mk" style="color:var(--accent-ink)">[ event name ]</span>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 2 · SECTION DIVIDER ===================== -->
+    <section class="slide s-section" data-section="§01 — what i shipped">
+      <div data-reveal style="--i:0" class="num">§01</div>
+      <h2 data-reveal style="--i:1">What I<br>shipped</h2>
+      <p class="lede" data-reveal style="--i:2">[ one sentence framing this section ]</p>
+    </section>
+
+    <!-- ===================== SLIDE 3 · CONTENT GRID ===================== -->
+    <section class="slide s-content" data-section="§01 — what i shipped">
+      <p class="kicker" data-reveal style="--i:0">In recent weeks</p>
+      <h2 class="head" data-reveal style="--i:1">[ section heading ]</h2>
+      <div class="grid">
+        <div class="cell" data-reveal style="--i:2"><span class="n">01</span><div class="ph">artifact / proof</div><p>[ rebuilt dbatools.io in a day ]</p></div>
+        <div class="cell" data-reveal style="--i:3"><span class="n">02</span><div class="ph">artifact / proof</div><p>[ french localization, realcajunrecipes ]</p></div>
+        <div class="cell" data-reveal style="--i:4"><span class="n">03</span><div class="ph">artifact / proof</div><p>[ batch-fixed 100+ blog posts ]</p></div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 4 · STATEMENT ===================== -->
+    <section class="slide s-statement" data-section="§02 — the realization">
+      <p class="kicker" data-reveal style="--i:0">§02 — the realization</p>
+      <p class="statement" data-reveal style="--i:1">A whole session is now <em>one prompt</em>. [ and better. ]</p>
+    </section>
+
+    <!-- ===================== SLIDE 5 · SHOWCASE ===================== -->
+    <section class="slide s-showcase" data-section="§03 — show, don't tell">
+      <div class="col">
+        <p class="kicker" data-reveal style="--i:0">Demo</p>
+        <h2 class="head" data-reveal style="--i:1; font-size:46px">[ live walk-through ]</h2>
+        <p class="lede" data-reveal style="--i:2">[ what the audience is looking at ]</p>
+      </div>
+      <div class="stagebox" data-reveal style="--i:3">
+        <div class="ph shot solid">screenshot / terminal / diff</div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 6 · COMPARE ===================== -->
+    <section class="slide s-compare" data-section="§04 — the cli landscape">
+      <p class="kicker" data-reveal style="--i:0">§04 — the cli landscape</p>
+      <h2 class="head" data-reveal style="--i:1">[ comparing the CLIs ]</h2>
+      <table data-reveal style="--i:2">
+        <thead><tr><th>Tool</th><th>[ dimension ]</th><th>[ dimension ]</th><th>[ dimension ]</th></tr></thead>
+        <tbody>
+          <tr><th>Claude Code</th><td>[ … ]</td><td>[ … ]</td><td class="mk">[ … ]</td></tr>
+          <tr><th>Codex</th><td>[ … ]</td><td>[ … ]</td><td>[ … ]</td></tr>
+          <tr><th>GitHub Copilot</th><td>[ … ]</td><td>[ … ]</td><td>[ … ]</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ===================== SLIDE 7 · CLOSING ===================== -->
+    <section class="slide s-closing" data-section="§05 — closing">
+      <p class="kicker" data-reveal style="--i:0">Thank you, Dublin</p>
+      <p class="statement" data-reveal style="--i:1">Work got <em>exciting</em> again.</p>
+      <div class="links" data-reveal style="--i:2">
+        <a href="#"><span class="at">@</span> [ social / handle ]</a>
+        <a href="#">[ slides url ]</a>
+        <a href="#">dbatools.io <span style="color:var(--line)">·</span> realcajunrecipes.com</a>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<div id="hint"><kbd>←</kbd><kbd>→</kbd> navigate &nbsp;·&nbsp; <kbd>F</kbd> fullscreen &nbsp;·&nbsp; <kbd>?</kbd> help</div>
+
+<script>
+(() => {
+  const stage   = document.getElementById('stage');
+  const viewport= document.getElementById('viewport');
+  const slides  = [...document.querySelectorAll('.slide')];
+  const progress= document.getElementById('progress-bar') || createProgress();
+  const pageCur = document.getElementById('page-cur');
+  const pageTot = document.getElementById('page-total');
+  const secLbl  = document.getElementById('section-label');
+  const hint    = document.getElementById('hint');
+
+  function createProgress(){
+    const p = document.createElement('div'); p.id='progress'; stage.appendChild(p); return p;
+  }
+
+  let i = 0;
+  pageTot.textContent = String(slides.length).padStart(2,'0');
+
+  /* ---- fit the fixed stage into the viewport ---- */
+  function fit(){
+    const pad = 0;
+    const sw = stage.offsetWidth, sh = stage.offsetHeight;
+    const scale = Math.min(
+      (window.innerWidth  - pad) / sw,
+      (window.innerHeight - pad) / sh
+    );
+    stage.style.transform = `scale(${scale})`;
+  }
+
+  function show(n){
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach((s, idx) => {
+      if (idx === i) s.setAttribute('data-active','');
+      else s.removeAttribute('data-active');
+    });
+    const active = slides[i];
+    secLbl.textContent = active.dataset.section || '';
+    pageCur.textContent = String(i + 1).padStart(2,'0');
+    progress.style.width = ((i) / (slides.length - 1) * 100) + '%';
+    location.hash = 'slide-' + (i + 1);
+  }
+
+  const next = () => show(i + 1);
+  const prev = () => show(i - 1);
+
+  /* ---- keyboard ---- */
+  addEventListener('keydown', e => {
+    switch(e.key){
+      case 'ArrowRight': case ' ': case 'PageDown': case 'l': case 'L': next(); e.preventDefault(); break;
+      case 'ArrowLeft':  case 'PageUp':  case 'h': case 'H': prev(); e.preventDefault(); break;
+      case 'Home': show(0); break;
+      case 'End':  show(slides.length - 1); break;
+      case 'f': case 'F':
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+        break;
+      case '?': hint.style.opacity = hint.style.opacity === '1' ? '0' : '1'; break;
+    }
+  });
+
+  /* ---- click / tap to advance (ignore links) ---- */
+  viewport.addEventListener('click', e => {
+    if (e.target.closest('a')) return;
+    (e.clientX < window.innerWidth * 0.18) ? prev() : next();
+  });
+
+  /* ---- restore from hash, auto-hide hint ---- */
+  const fromHash = parseInt((location.hash.match(/slide-(\d+)/) || [])[1], 10);
+  addEventListener('resize', fit);
+  fit();
+  show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+
+  hint.style.opacity = '1';
+  setTimeout(() => { hint.style.opacity = '0'; }, 4200);
+})();
+</script>
+</body>
+</html>
