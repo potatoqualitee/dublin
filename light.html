@@ -765,6 +765,23 @@ h1.title{
     lbImg.onload = null;
   };
 
+  function deckLocalPath(value){
+    if (!value || /^(?:https?:|data:|blob:|#)/i.test(value)) return value;
+    const path = value.trim().replace(/^file:\/\/\/?/i, '').replace(/\\/g, '/');
+    const lower = path.toLowerCase();
+    const ref = '/references/';
+    const refAt = lower.lastIndexOf(ref);
+    if (refAt !== -1) return 'references/' + path.slice(refAt + ref.length);
+    if (lower.startsWith('references/')) return path;
+    if (lower === 'logo.png' || lower.endsWith('/logo.png')) return 'logo.png';
+    return path;
+  }
+
+  document.querySelectorAll('img[src]').forEach(img => {
+    const fixed = deckLocalPath(img.getAttribute('src'));
+    if (fixed !== img.getAttribute('src')) img.setAttribute('src', fixed);
+  });
+
   function createProgress(){
     const p = document.createElement('div'); p.id='progress'; stage.appendChild(p); return p;
   }
