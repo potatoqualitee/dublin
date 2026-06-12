@@ -346,6 +346,9 @@ h1.title{
 .hooks.hooks-three{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 30px; }
 .hooks.hooks-three .hook{ flex-direction:column; align-items:flex-start; gap:8px; padding:16px 0 14px; }
 .hooks.hooks-three .hook .hk{ flex:0 0 auto; }
+.hook-skill-grid{ margin-top:24px; flex:1 1 auto; min-height:0; display:grid; gap:22px; align-content:center; }
+.hook-group-label{ font-family:var(--mono); font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent-ink); }
+.hook-skill-grid .hooks{ margin-top:8px; flex:0 0 auto; }
 .s-hook-intro{ justify-content:center; }
 .s-hook-intro .hook-wrap{
   display:grid; grid-template-columns:420px minmax(0,1fr); gap:54px;
@@ -758,19 +761,47 @@ h1.title{
       <p class="close-note" data-reveal style="--i:2">Same setup: repo, sources, skills, hooks, memory. Source in, a finished brief out.</p>
     </section>
 
-    <!-- ===================== SLIDE 15 · HOOKS FOR PROSE ===================== -->
+    <!-- ===================== SLIDE 15 · HOOKS AND SKILLS FOR PROSE ===================== -->
     <section class="slide s-list" data-section="§04 / beyond code">
-      <span class="kicker" data-reveal style="--i:0">Hooks, for prose</span>
-      <h2 class="sc-title" data-reveal style="--i:1">The repo checks the writing.</h2>
-      <p class="sc-note" data-reveal style="--i:1">Same machinery as before. Different rules. These read prose, not SQL.</p>
-      <div class="hooks hooks-three" data-reveal style="--i:2">
-        <div class="hook"><span class="hk">en-GB</span><span class="hd">Catches American spelling before it lands.</span></div>
-        <div class="hook"><span class="hk">source-check</span><span class="hd">Every claim points back to a reference.</span></div>
-        <div class="hook"><span class="hk">file-names</span><span class="hd">Files stay lowercase and dated.</span></div>
+      <span class="kicker" data-reveal style="--i:0">Hooks and skills</span>
+      <h2 class="sc-title" data-reveal style="--i:1">The repo checks the writing.<br>The skills carry the context.</h2>
+      <p class="sc-note" data-reveal style="--i:1">Same setup as code. Enforcement plus knowledge.</p>
+      <div class="hook-skill-grid" data-reveal style="--i:2">
+        <div>
+          <p class="hook-group-label">Hooks</p>
+          <div class="hooks hooks-three">
+            <div class="hook"><span class="hk">en-GB</span><span class="hd">Catches American spelling before it lands.</span></div>
+            <div class="hook"><span class="hk">source-check</span><span class="hd">Every claim points back to a reference.</span></div>
+            <div class="hook"><span class="hk">file-names</span><span class="hd">Files stay lowercase and dated.</span></div>
+          </div>
+        </div>
+        <div>
+          <p class="hook-group-label">Skills</p>
+          <div class="hooks hooks-three">
+            <div class="hook"><span class="hk">writing-style</span><span class="hd">Marc's house style, British English, tight prose.</span></div>
+            <div class="hook"><span class="hk">company-profile</span><span class="hd">Avenir, Horizon, Meridian, and the PMO.</span></div>
+            <div class="hook"><span class="hk">project-profile</span><span class="hd">The brief, source docs, constraints, and deliverables.</span></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ===================== SLIDE 16 · RAINBOW FINALE ===================== -->
+    <!-- ===================== SLIDE 16 · MAPS APP ===================== -->
+    <section class="slide s-showcase" data-section="§04 / beyond code">
+      <div class="sc-head">
+        <div>
+          <span class="kicker" data-reveal style="--i:0">Where to live</span>
+          <h2 class="sc-title" data-reveal style="--i:1">I WROTE A MAPS APP!</h2>
+        </div>
+        <span class="sc-link muted" data-reveal style="--i:2">local build</span>
+      </div>
+      <p class="sc-note" data-reveal style="--i:2">It found POIs. It helped me develop the scoring algorithm.</p>
+      <figure class="sc-shot shot-full" data-reveal style="--i:3">
+        <img src="references/hague.webp" alt="Den Haag livability map with a 76 out of 100 score panel">
+      </figure>
+    </section>
+
+    <!-- ===================== SLIDE 17 · RAINBOW FINALE ===================== -->
     <section class="slide s-rainbow" data-section="§05 / closing">
       <div class="rainbow-wrap" data-reveal style="--i:0">
         <svg class="rainbow" viewBox="0 0 400 200" role="img" aria-label="A rainbow">
