@@ -1,6 +1,6 @@
 # Dublin presentation
 
-This repo is a single-file conference slide deck. Existing project guidance lives in `CLAUDE.md`, `PRODUCT.md`, and `DESIGN.md`; follow those when changing slide content or visual design.
+This repo is a conference slide deck. The slide files are `index.html` and `light.html`. Existing project guidance lives in `CLAUDE.md`, `PRODUCT.md`, and `DESIGN.md`; follow those when changing slide content or visual design.
 
 ## Command execution
 
@@ -16,7 +16,7 @@ This is a project-local workaround for a repeat sandbox spawn issue, not permiss
 
 ## Slide work
 
-When Chrissy says to update "the deck" or otherwise gives slide-editing directions, default to `index.html` regardless of which file is active in the IDE. If the request clearly applies to the short/lightning version too, update `lightning.html` as well. Keep the matching slide notes in sync: `SLIDES-REDUX.md` for `index.html` and `SLIDES-LIGHTNING.md` for `lightning.html`.
+When Chrissy says to update "the deck" or otherwise gives slide-editing directions, default to `index.html` regardless of which file is active in the IDE. If the request clearly applies to the short/light version too, update `light.html` as well. Do not update separate notes files.
 
 When editing audience-facing slide copy, follow `CLAUDE.md`: terse fragments, no em dashes, no `--`, no promo filler, and keep Chrissy's confident practitioner voice.
 

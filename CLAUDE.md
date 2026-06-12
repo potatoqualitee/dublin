@@ -13,7 +13,7 @@ Specifics that matter most here:
 - No em dashes and no `--`. Use commas, colons, periods, or parentheses.
 - Slide text is terse. Fragments over full sentences. Cut filler and hedges.
 - No promotional adjectives ("powerful", "seamless", "game-changing", "revolutionize") and no rule-of-three padding.
-- Chrissy's voice: confident, energetic, expert, a little irreverent. Plain words a senior practitioner would actually say out loud.
+- Chrissy's voice: confident, direct, no-nonsense. Plain words a senior practitioner would actually say out loud. No marketing, no cleverness.
 
 ## Design
 
