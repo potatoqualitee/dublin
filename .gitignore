@@ -1,1 +1,16 @@
-/references
+/references/*
+!/references/ai-cli-blog.png
+!/references/ai-fixes-microsoft-link-rot.png
+!/references/ai-updates-moved-blog-links.png
+!/references/github-billing.webp
+!/references/hague.webp
+!/references/positive.jpg
+!/references/shot-cc-cli.png
+!/references/shot-cc-desktop.png
+!/references/shot-cc-vscode.png
+!/references/shot-codex.png
+!/references/shot-dbatools.png
+!/references/shot-fowler.png
+!/references/shot-lab.png
+!/references/shot-realcajunrecipes.png
+!/references/sponsors.png
