@@ -340,7 +340,7 @@ h1.title{
   grid-template-columns:1fr 1fr; gap:0 44px; align-content:center;
 }
 .hooks .hook{ display:flex; gap:16px; align-items:baseline; padding:11px 0; border-bottom:1px solid color-mix(in oklch, var(--line) 78%, transparent); }
-.hooks .hook .hk{ font-family:var(--mono); font-size:15px; color:var(--accent-ink); white-space:nowrap; min-width:9.5em; }
+.hooks .hook .hk{ font-family:var(--mono); font-size:15px; color:var(--accent-ink); white-space:nowrap; flex:0 0 22ch; }
 .hooks .hook .hd{ font-size:17px; line-height:1.3; color:var(--ink-soft); }
 .hooks .hook.meta .hd{ color:var(--ink); }
 .s-hook-intro{ justify-content:center; }
@@ -681,7 +681,65 @@ h1.title{
       </div>
     </section>
 
-    <!-- ===================== SLIDE 12 · THE MITIGATION ===================== -->
+    <!-- ===================== SLIDE 12 · HOOKS ===================== -->
+    <section class="slide s-list" data-section="§03 / guardrails">
+      <span class="kicker" data-reveal style="--i:0">Hooks</span>
+      <h2 class="sc-title" data-reveal style="--i:1">Hooks make the repo push back</h2>
+      <p class="sc-note" data-reveal style="--i:1">A pre-write hook blocks bad edits before they land. A stop hook catches a runaway session. A command hook rewrites the shell call before it runs.</p>
+      <div class="hooks" data-reveal style="--i:2">
+        <div class="hook"><span class="hk">sql-injection</span><span class="hd">Interpolated SQL gets blocked. Parameters or nothing.</span></div>
+        <div class="hook"><span class="hk">tests-for-files</span><span class="hd">Every source file maps to the test it owes.</span></div>
+        <div class="hook"><span class="hk">rtk-rewriter</span><span class="hd">Shell commands get filtered, shortened, or stopped.</span></div>
+        <div class="hook"><span class="hk">localhost-fetch</span><span class="hd">Containers use service names, not fake localhost.</span></div>
+        <div class="hook"><span class="hk">file-size-cop</span><span class="hd">About to write a 900-line monster? It warns first.</span></div>
+        <div class="hook meta"><span class="hk">privilege-drop-checker</span><span class="hd">Containers that run as root don't make it past this.</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 13 · SKILLS ===================== -->
+    <section class="slide s-skills" data-section="§03 / guardrails">
+      <span class="kicker" data-reveal style="--i:0">Skills</span>
+      <h2 class="sc-title" data-reveal style="--i:1">Skills teach tools and taste</h2>
+      <p class="sc-note" data-reveal style="--i:1">Your rules, your voice, and how to use the thing without guessing.</p>
+
+      <div class="skill-grid">
+        <div class="skill-card" data-reveal style="--i:2">
+          <h3>dbatools</h3>
+          <div class="repo"><a href="https://dbatools.io" target="_blank" rel="noreferrer">dbatools.io</a></div>
+          <p>Usage: 700+ SQL Server commands, WhatIf first, backups, restores, migrations, AGs, and exact output fields.</p>
+          <div class="skill-mini" aria-label="dbatools command guide illustration">
+            <div class="skill-row"><span>backup</span><div class="skill-bar"><span style="width:88%"></span></div></div>
+            <div class="skill-row"><span>restore</span><div class="skill-bar"><span style="width:82%"></span></div></div>
+            <div class="skill-row"><span>migrate</span><div class="skill-bar"><span style="width:76%"></span></div></div>
+            <div class="skill-row"><span>WhatIf</span><div class="skill-bar"><span style="width:96%"></span></div></div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-reveal style="--i:3">
+          <h3>Impeccable</h3>
+          <div class="repo"><a href="https://github.com/pbakaus/impeccable" target="_blank" rel="noreferrer">github.com/pbakaus/impeccable</a></div>
+          <p>Taste: hierarchy, contrast, spacing, and a very healthy dislike of samey AI interfaces.</p>
+          <div class="skill-mini" aria-label="Impeccable scorecard illustration">
+            <div class="skill-row"><span>hierarchy</span><div class="skill-bar"><span style="width:92%"></span></div></div>
+            <div class="skill-row"><span>contrast</span><div class="skill-bar"><span style="width:84%"></span></div></div>
+            <div class="skill-row"><span>spacing</span><div class="skill-bar"><span style="width:88%"></span></div></div>
+            <div class="skill-row"><span>AI tells</span><div class="skill-bar"><span style="width:18%"></span></div></div>
+          </div>
+        </div>
+
+        <div class="skill-card" data-reveal style="--i:4">
+          <h3>Humanizer</h3>
+          <div class="repo"><a href="https://github.com/blader/humanizer" target="_blank" rel="noreferrer">github.com/blader/humanizer</a></div>
+          <p>Voice: cuts the shiny mush, then asks what still sounds fake.</p>
+          <div class="before-after" aria-label="Humanizer before and after illustration">
+            <div class="text-sample">Before: a pivotal, seamless, transformative solution that unlocks operational excellence.</div>
+            <div class="text-sample after">After: the hook stops obvious mistakes before they land in the repo.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 14 · THE MITIGATION ===================== -->
     <section class="slide s-list" data-section="§03 / guardrails">
       <span class="kicker" data-reveal style="--i:0">The old guard</span>
       <h2 class="sc-title" data-reveal style="--i:1">The agent proposes.<br>A person merges.</h2>
@@ -708,14 +766,14 @@ h1.title{
       </div>
     </section>
 
-    <!-- ===================== SLIDE 13 · BUSINESS PAPERS ===================== -->
+    <!-- ===================== SLIDE 15 · BUSINESS PAPERS ===================== -->
     <section class="slide s-close" data-section="§04 / beyond code">
       <span class="kicker" data-reveal style="--i:0">Beyond code</span>
       <h2 class="lede-xl" data-reveal style="--i:1">I write business papers<br>the way I write software.</h2>
       <p class="close-note" data-reveal style="--i:2">Same setup: repo, sources, skills, hooks, memory. Source in, a finished brief out.</p>
     </section>
 
-    <!-- ===================== SLIDE 14 · HOOKS FOR PROSE ===================== -->
+    <!-- ===================== SLIDE 16 · HOOKS FOR PROSE ===================== -->
     <section class="slide s-list" data-section="§04 / beyond code">
       <span class="kicker" data-reveal style="--i:0">Hooks, for prose</span>
       <h2 class="sc-title" data-reveal style="--i:1">The repo checks the writing.</h2>
@@ -734,7 +792,7 @@ h1.title{
       </div>
     </section>
 
-    <!-- ===================== SLIDE 15 · RAINBOW FINALE ===================== -->
+    <!-- ===================== SLIDE 17 · RAINBOW FINALE ===================== -->
     <section class="slide s-rainbow" data-section="§05 / closing">
       <div class="rainbow-wrap" data-reveal style="--i:0">
         <svg class="rainbow" viewBox="0 0 400 200" role="img" aria-label="A rainbow">
