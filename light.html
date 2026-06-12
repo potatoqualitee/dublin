@@ -509,7 +509,7 @@ h1.title{
 
     <!-- ===================== SLIDE 1 · TITLE ===================== -->
     <section class="slide s-title" data-section="§00 / cold open">
-      <svg class="ceili-mark title-mark" aria-hidden="true"><use href="#knot"></use></svg>
+      <svg class="ceili-mark title-mark" aria-hidden="true" focusable="false"><use href="#ceili-icon"></use></svg>
       <h1 class="title" data-reveal style="--i:0">CLAUDE CODE</h1>
       <span class="title-tail" data-reveal style="--i:1">will change your life</span>
       <div class="event-line" data-reveal style="--i:2">
@@ -529,9 +529,9 @@ h1.title{
         <li>GitHub Star</li>
         <li>Manning author</li>
         <li>creator of dbatools</li>
+        <li>full-time enterprise vibe coder</li>
       </ul>
       <p class="bio-line" data-reveal style="--i:3">I haven't written a line of code in months.</p>
-      <p class="bio-line" data-reveal style="--i:4">I build tools to make myself faster. This one got addictive.</p>
     </section>
 
     <!-- ===================== SLIDE 3 · BROWSER vs COMPUTER ===================== -->
@@ -540,14 +540,14 @@ h1.title{
       <h2 class="vs-title" data-reveal style="--i:1">One lives in a tab.<br>One lives on your machine.</h2>
       <div class="vs-grid">
         <div class="vs-col" data-reveal style="--i:2">
-          <h3 class="vs-where">Browser chat</h3>
-          <p class="vs-who">claude.ai <span class="sep">/</span> chatgpt.com</p>
-          <p class="vs-desc">Great at words. Bad at your repo, your shell, your files, and all the local mess where work actually happens.</p>
+          <h3 class="vs-where">In the browser</h3>
+          <p class="vs-who">claude.ai <span class="sep">·</span> chatgpt.com</p>
+          <p class="vs-desc">Lives in a tab. It reads and writes text, and that's the whole job. It can't open your files or run a single command.</p>
         </div>
         <div class="vs-col accent" data-reveal style="--i:3">
-          <h3 class="vs-where">Local agent</h3>
-          <p class="vs-who">Claude Code <span class="sep">/</span> Codex <span class="sep">/</span> GitHub Copilot</p>
-          <p class="vs-desc">Shell access, filesystem access, and a transcript. Browser chat has none of that.</p>
+          <h3 class="vs-where">On your computer</h3>
+          <p class="vs-who">Claude Code <span class="sep">·</span> Codex <span class="sep">·</span> GitHub Copilot</p>
+          <p class="vs-desc">Lives on your machine. It reads your files and runs commands to make real changes. Usually inside a sandbox. Not always.</p>
         </div>
       </div>
     </section>
@@ -561,7 +561,7 @@ h1.title{
         </div>
         <a class="sc-link" href="https://blog.netnerds.net/lab" target="_blank" rel="noopener" data-reveal style="--i:2">blog.netnerds.net/lab <span class="arr">↗</span></a>
       </div>
-      <p class="sc-note" data-reveal style="--i:2">I said: map it. Claude found the VMs, SQL instances, subnets, and SSH tunnel, then made the diagram I needed.</p>
+      <p class="sc-note" data-reveal style="--i:2">I handed Claude my machine and said, map it. It found the VMs, SQL instances, subnets, and SSH tunnel, then made the diagram I needed.</p>
       <figure class="sc-shot linked" data-reveal style="--i:3">
         <span class="sc-ph">drop references/shot-lab.png to show the network map</span>
         <img src="references/shot-lab.png" alt="Claude Code generated a network map of Chrissy's lab" onload="this.closest('.sc-shot').classList.remove('placeholder')" onerror="this.closest('.sc-shot').classList.add('placeholder'); this.remove()">
@@ -572,8 +572,8 @@ h1.title{
     <!-- ===================== SLIDE 5 · FINISHED PROJECTS (INTRO) ===================== -->
     <section class="slide s-close" data-section="§02 / proof">
       <span class="kicker" data-reveal style="--i:0">The real shift</span>
-      <h2 class="lede-xl" data-reveal style="--i:1">Claude Code made impossible amounts of work possible.</h2>
-      <p class="close-note" data-reveal style="--i:2">Some jobs are just too big for one person. Migrations, site rebuilds, translations, all that maintenance that never makes the sprint.</p>
+      <h2 class="lede-xl" data-reveal style="--i:1">Claude Code makes impossible tasks possible for one person.</h2>
+      <p class="close-note" data-reveal style="--i:2">Tasks, fun, chores, weird ideas. Migrations, site rebuilds, translations. Things I used to shelve because I only had two hands.</p>
     </section>
 
     <!-- ===================== SLIDE 6 · dbatools.io ===================== -->
@@ -585,7 +585,7 @@ h1.title{
         </div>
         <a class="sc-link" href="https://dbatools.io" target="_blank" rel="noopener" data-reveal style="--i:2">dbatools.io <span class="arr">↗</span></a>
       </div>
-      <p class="sc-note" data-reveal style="--i:2">Old HTML in. Dark mode, docs, and a getting-started guide out. The boring migration finally happened.</p>
+      <p class="sc-note" data-reveal style="--i:2">Gave Claude the old HTML. Got back dark mode and a getting-started guide that actually helps.</p>
       <figure class="sc-shot linked" data-reveal style="--i:3">
         <img src="references/shot-dbatools.png" alt="The rebuilt dbatools.io website">
         <a href="https://dbatools.io" target="_blank" rel="noopener" aria-label="Open dbatools.io"></a>
@@ -596,12 +596,12 @@ h1.title{
     <section class="slide s-showcase" data-section="§02 / proof">
       <div class="sc-head">
         <div>
-          <span class="kicker" data-reveal style="--i:0">Moved</span>
+          <span class="kicker" data-reveal style="--i:0">Off WordPress</span>
           <h2 class="sc-title" data-reveal style="--i:1">realcajunrecipes.com</h2>
         </div>
         <a class="sc-link" href="https://realcajunrecipes.com" target="_blank" rel="noopener" data-reveal style="--i:2">realcajunrecipes.com <span class="arr">↗</span></a>
       </div>
-      <p class="sc-note" data-reveal style="--i:2">Twenty years of recipes, off WordPress, now static and boring. Then the dream feature: French French at scale.</p>
+      <p class="sc-note" data-reveal style="--i:2">Twenty years of recipes, off WordPress, now static and unhackable. Then the part I wanted for years: French French at scale.</p>
       <figure class="sc-shot linked" data-reveal style="--i:3">
         <img src="references/shot-realcajunrecipes.png" alt="The rebuilt Real Cajun Recipes website">
         <a href="https://realcajunrecipes.com" target="_blank" rel="noopener" aria-label="Open Real Cajun Recipes"></a>
@@ -612,15 +612,14 @@ h1.title{
     <section class="slide s-showcase" data-section="§02 / proof">
       <div class="sc-head">
         <div>
-          <span class="kicker" data-reveal style="--i:0">Maintenance</span>
+          <span class="kicker" data-reveal style="--i:0">Blog maintenance</span>
           <h2 class="sc-title" data-reveal style="--i:1">100+ posts updated, one prompt</h2>
         </div>
-        <a class="sc-link" href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener" data-reveal style="--i:2">prompt <span class="arr">↗</span></a>
+        <a class="sc-link" href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener" data-reveal style="--i:2">blog-refresh.md <span class="arr">↗</span></a>
       </div>
-      <p class="sc-note" data-reveal style="--i:2">Not content generation. Maintenance. Links, screenshots, commands, embeds. The work that always loses to everything else.</p>
-      <figure class="sc-shot linked" data-reveal style="--i:3">
-        <img src="references/ai-cli-blog.png" alt="A blog maintenance prompt for refreshing more than 100 old posts">
-        <a href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener" aria-label="Open the blog refresh prompt"></a>
+      <p class="sc-note" data-reveal style="--i:2">Not content generation. Maintenance. Links, screenshots, commands, Twitter embeds. The work that always loses to everything else.</p>
+      <figure class="sc-shot shot-full linked" data-reveal style="--i:3">
+        <a href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener"><img src="references/ai-cli-blog.png" alt="Update your blog with an AI CLI hero image"></a>
       </figure>
     </section>
 
@@ -658,24 +657,25 @@ h1.title{
     <section class="slide s-hook-intro" data-section="§03 / guardrails">
       <div class="hook-wrap">
         <div>
-          <span class="kicker" data-reveal style="--i:0">The honest part</span>
-          <p class="hook-note" data-reveal style="--i:1">The speed only works with <span class="mk">policy, context, and a transcript</span>.</p>
+          <span class="kicker" data-reveal style="--i:0">Why Claude Code feels different</span>
+          <h2 class="hook-title" data-reveal style="--i:1">Control surfaces for agents</h2>
+          <p class="hook-note" data-reveal style="--i:2"><span class="mk">Policy.</span> Context. A transcript.</p>
         </div>
-        <div class="control-stack">
-          <div class="control-card" data-reveal style="--i:2">
-            <div class="control-top"><span class="control-name">Hooks</span><span class="control-tag">before it writes</span></div>
-            <p>Catch bad moves before they hit the repo.</p>
-            <div class="control-examples"><span>read first</span><span>file size cop</span><span>stop gate</span></div>
+        <div class="control-stack" data-reveal style="--i:3">
+          <div class="control-card">
+            <div class="control-top"><span class="control-name">Hooks</span><span class="control-tag">before, during, after</span></div>
+            <p>Block bad moves before they land in the repo.</p>
+            <div class="control-examples"><span>read-before-edit</span><span>test gate</span><span>stop check</span></div>
           </div>
-          <div class="control-card" data-reveal style="--i:3">
-            <div class="control-top"><span class="control-name">Skills</span><span class="control-tag">when taste matters</span></div>
-            <p>Inject the right rules for the task at hand.</p>
-            <div class="control-examples"><span>design</span><span>voice</span><span>dbatools</span></div>
+          <div class="control-card">
+            <div class="control-top"><span class="control-name">Skills</span><span class="control-tag">progressive disclosure</span></div>
+            <p>Load the right rules only when the work needs them.</p>
+            <div class="control-examples"><span>repo rules</span><span>domain docs</span><span>voice</span></div>
           </div>
-          <div class="control-card" data-reveal style="--i:4">
-            <div class="control-top"><span class="control-name">Commands</span><span class="control-tag">same playbook</span></div>
-            <p>Repeatable prompts for work you do on a schedule.</p>
-            <div class="control-examples"><span>/ralph</span><span>verify</span><span>handoff</span></div>
+          <div class="control-card">
+            <div class="control-top"><span class="control-name">Commands</span><span class="control-tag">repeatable routines</span></div>
+            <p>Turn the checklist you keep repeating into one slash command.</p>
+            <div class="control-examples"><span>/ralph</span><span>/session-analysis</span><span>verify</span></div>
           </div>
         </div>
       </div>
@@ -683,7 +683,7 @@ h1.title{
 
     <!-- ===================== SLIDE 12 · THE MITIGATION ===================== -->
     <section class="slide s-list" data-section="§03 / guardrails">
-      <span class="kicker" data-reveal style="--i:0">Bring the old guards back</span>
+      <span class="kicker" data-reveal style="--i:0">The old guard</span>
       <h2 class="sc-title" data-reveal style="--i:1">The agent proposes.<br>A person merges.</h2>
       <p class="sc-note" data-reveal style="--i:1">I put more thought into it than feature, feature, feature. More code still has to be owned.</p>
       <div class="body">
@@ -708,8 +708,34 @@ h1.title{
       </div>
     </section>
 
-    <!-- ===================== SLIDE 13 · RAINBOW FINALE ===================== -->
-    <section class="slide s-rainbow" data-section="§04 / closing">
+    <!-- ===================== SLIDE 13 · BUSINESS PAPERS ===================== -->
+    <section class="slide s-close" data-section="§04 / beyond code">
+      <span class="kicker" data-reveal style="--i:0">Beyond code</span>
+      <h2 class="lede-xl" data-reveal style="--i:1">I write business papers<br>the way I write software.</h2>
+      <p class="close-note" data-reveal style="--i:2">Same setup: repo, sources, skills, hooks, memory. Source in, a finished brief out.</p>
+    </section>
+
+    <!-- ===================== SLIDE 14 · HOOKS FOR PROSE ===================== -->
+    <section class="slide s-list" data-section="§04 / beyond code">
+      <span class="kicker" data-reveal style="--i:0">Hooks, for prose</span>
+      <h2 class="sc-title" data-reveal style="--i:1">The repo checks the writing.</h2>
+      <p class="sc-note" data-reveal style="--i:1">Same machinery as before. Different rules. These read prose, not SQL.</p>
+      <div class="hooks" data-reveal style="--i:2">
+        <div class="hook"><span class="hk">en-GB</span><span class="hd">Catches American spelling before it lands.</span></div>
+        <div class="hook"><span class="hk">source-check</span><span class="hd">Every claim points back to a reference.</span></div>
+        <div class="hook"><span class="hk">house-style</span><span class="hd">Active voice, no filler, their naming.</span></div>
+        <div class="hook"><span class="hk">client-copy</span><span class="hd">Internal notes stay out of the brief.</span></div>
+        <div class="hook"><span class="hk">banned-phrases</span><span class="hd">Blocks "seamless", "leverage", and filler.</span></div>
+        <div class="hook"><span class="hk">file-names</span><span class="hd">Files stay lowercase and dated.</span></div>
+        <div class="hook"><span class="hk">two-plans</span><span class="hd">Internal spec, plus clean client copy.</span></div>
+        <div class="hook"><span class="hk">tidiness-check</span><span class="hd">Stray files get flagged before handoff.</span></div>
+        <div class="hook"><span class="hk">memory-sync</span><span class="hd">New rules save back into the repo.</span></div>
+        <div class="hook meta"><span class="hk">stop-check</span><span class="hd">Flags TODOs before I stop.</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== SLIDE 15 · RAINBOW FINALE ===================== -->
+    <section class="slide s-rainbow" data-section="§05 / closing">
       <div class="rainbow-wrap" data-reveal style="--i:0">
         <svg class="rainbow" viewBox="0 0 400 200" role="img" aria-label="A rainbow">
           <g fill="none" stroke-width="13">
