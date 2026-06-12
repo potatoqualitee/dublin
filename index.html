@@ -208,6 +208,19 @@ h1.title{
 .s-title .by .sep{ color:var(--line); }
 .s-title .by .mk{ color:var(--accent-ink); }
 
+/* ===== required sponsor slide ===== */
+.s-sponsors{
+  padding:0;
+  background:#2f7d20;
+}
+.s-sponsors[data-active]{ z-index:7; }
+.s-sponsors img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
 /* ===== bio / who's talking ===== */
 .s-bio{ justify-content:center; }
 .s-bio .bio-name{ margin-top:16px; font-weight:700; letter-spacing:-.02em; line-height:.94; font-size:90px; }
@@ -523,6 +536,11 @@ h1.title{
       </div>
     </section>
 
+    <!-- ===================== SLIDE 2 · SPONSORS ===================== -->
+    <section class="slide s-sponsors" data-section="§00 — sponsors" aria-label="Thank you to our sponsors">
+      <img src="references/sponsors.png" alt="Thank you to our sponsors. Redgate, Prodata, Data Masterminds, Datalineo, and Data Céilí.">
+    </section>
+
     <!-- ===================== SLIDE 2 · WHO'S TALKING ===================== -->
     <section class="slide s-bio" data-section="§00 — who's talking">
       <p class="kicker" data-reveal style="--i:0">Who's talking</p>
@@ -704,7 +722,7 @@ h1.title{
       <div class="sc-head">
         <div>
           <span class="kicker" data-reveal style="--i:0">Blog maintenance</span>
-          <h2 class="sc-title" data-reveal style="--i:1">100+ posts, one prompt</h2>
+          <h2 class="sc-title" data-reveal style="--i:1">100+ posts updated, one prompt</h2>
         </div>
         <a class="sc-link" data-reveal style="--i:2" href="https://github.com/dataplat/web/blob/html/prompts/blog-refresh.md" target="_blank" rel="noopener">blog-refresh.md <span class="arr">↗</span></a>
       </div>
@@ -776,7 +794,7 @@ h1.title{
     <!-- ===================== SLIDE 20 · SKILLS ===================== -->
     <section class="slide s-skills" data-section="§05 — the honest part">
       <span class="kicker" data-reveal style="--i:0">Skills</span>
-      <h2 class="sc-title" data-reveal style="--i:1">Skills teach taste and tools</h2>
+      <h2 class="sc-title" data-reveal style="--i:1">Skills teach tools and taste</h2>
       <p class="sc-note" data-reveal style="--i:1">Your rules, your voice, and how to use the thing without guessing.</p>
 
       <div class="skill-grid">
@@ -1015,6 +1033,23 @@ h1.title{
     lightbox.removeAttribute('data-zoomed');
     lbImg.onload = null;
   };
+
+  function deckLocalPath(value){
+    if (!value || /^(?:https?:|data:|blob:|#)/i.test(value)) return value;
+    const path = value.trim().replace(/^file:\/\/\/?/i, '').replace(/\\/g, '/');
+    const lower = path.toLowerCase();
+    const ref = '/references/';
+    const refAt = lower.lastIndexOf(ref);
+    if (refAt !== -1) return 'references/' + path.slice(refAt + ref.length);
+    if (lower.startsWith('references/')) return path;
+    if (lower === 'logo.png' || lower.endsWith('/logo.png')) return 'logo.png';
+    return path;
+  }
+
+  document.querySelectorAll('img[src]').forEach(img => {
+    const fixed = deckLocalPath(img.getAttribute('src'));
+    if (fixed !== img.getAttribute('src')) img.setAttribute('src', fixed);
+  });
 
   function createProgress(){
     const p = document.createElement('div'); p.id='progress'; stage.appendChild(p); return p;
