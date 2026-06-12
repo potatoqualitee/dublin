@@ -672,12 +672,9 @@ h1.title{
       <h2 class="sc-title" data-reveal style="--i:1">Hooks make the repo push back</h2>
       <p class="sc-note" data-reveal style="--i:1">A pre-write hook blocks bad edits before they land. A stop hook catches a runaway session. A command hook rewrites the shell call before it runs.</p>
       <div class="hooks" data-reveal style="--i:2">
-        <div class="hook"><span class="hk">sql-injection</span><span class="hd">Interpolated SQL gets blocked. Parameters or nothing.</span></div>
+        <div class="hook"><span class="hk">sql-injector</span><span class="hd">Interpolated SQL gets blocked. Parameters or nothing.</span></div>
         <div class="hook"><span class="hk">tests-for-files</span><span class="hd">Every source file maps to the test it owes.</span></div>
-        <div class="hook"><span class="hk">rtk-rewriter</span><span class="hd">Shell commands get filtered, shortened, or stopped.</span></div>
-        <div class="hook"><span class="hk">localhost-fetch</span><span class="hd">Containers use service names, not fake localhost.</span></div>
         <div class="hook"><span class="hk">file-size-cop</span><span class="hd">About to write a 900-line monster? It warns first.</span></div>
-        <div class="hook meta"><span class="hk">privilege-drop-checker</span><span class="hd">Containers that run as root don't make it past this.</span></div>
       </div>
     </section>
 
