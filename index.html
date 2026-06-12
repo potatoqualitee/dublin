@@ -650,7 +650,7 @@ h1.title{
     <!-- ===================== SLIDE 10 · FINISHED PROJECTS (INTRO) ===================== -->
     <section class="slide s-close" data-section="§03 — what i shipped">
       <span class="kicker" data-reveal style="--i:0">The real shift</span>
-      <h2 class="lede-xl" data-reveal style="--i:1">Claude Code made impossible tasks possible for one person.</h2>
+      <h2 class="lede-xl" data-reveal style="--i:1">Claude Code makes impossible tasks possible for one person.</h2>
       <p class="close-note" data-reveal style="--i:2">Work, fun, chores, weird ideas. Migrations, site rebuilds, translations. Things I used to shelve because I only had two hands.</p>
     </section>
 
@@ -751,53 +751,11 @@ h1.title{
       <p class="close-note" data-reveal style="--i:2">Hooks are how vibe coding becomes production work.</p>
     </section>
 
-    <!-- ===================== SLIDE 18 · HOOKS / SKILLS / COMMANDS INTRO ===================== -->
-    <section class="slide s-hook-intro" data-section="§05 — the honest part">
-      <div class="hook-wrap">
-        <div>
-          <span class="kicker" data-reveal style="--i:0">Why Claude Code feels different</span>
-          <h2 class="hook-title" data-reveal style="--i:1">Control surfaces for agents</h2>
-          <p class="hook-note" data-reveal style="--i:2"><span class="mk">Policy.</span> Context. A transcript.</p>
-        </div>
-        <div class="control-stack" data-reveal style="--i:3">
-          <div class="control-card">
-            <div class="control-top">
-              <span class="control-name">Hooks</span>
-              <span class="control-tag">before, during, after</span>
-            </div>
-            <p>Block bad moves before they land in the repo.</p>
-            <div class="control-examples">
-              <span>read-before-edit</span>
-              <span>test gate</span>
-              <span>stop check</span>
-            </div>
-          </div>
-          <div class="control-card">
-            <div class="control-top">
-              <span class="control-name">Skills</span>
-              <span class="control-tag">progressive disclosure</span>
-            </div>
-            <p>Load the right rules only when the work needs them.</p>
-            <div class="control-examples">
-              <span>repo rules</span>
-              <span>domain docs</span>
-              <span>voice</span>
-            </div>
-          </div>
-          <div class="control-card">
-            <div class="control-top">
-              <span class="control-name">Commands</span>
-              <span class="control-tag">repeatable routines</span>
-            </div>
-            <p>Turn the checklist you keep repeating into one slash command.</p>
-            <div class="control-examples">
-              <span>/ralph</span>
-              <span>/session-analysis</span>
-              <span>verify</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- ===================== SLIDE 18 · FAIR WARNING ===================== -->
+    <section class="slide s-close" data-section="§05 — the honest part">
+      <span class="kicker" data-reveal style="--i:0">Fair warning</span>
+      <h2 class="lede-xl" data-reveal style="--i:1">Expectations will grow. Good to know going in.</h2>
+      <p class="close-note" data-reveal style="--i:2">Once people see what you can ship solo, they want more. We still have jobs. The work is more fun and less exhausting, at least for me.</p>
     </section>
 
     <!-- ===================== SLIDE 19 · HOOKS ===================== -->
@@ -806,12 +764,12 @@ h1.title{
       <h2 class="sc-title" data-reveal style="--i:1">Hooks make the repo push back</h2>
       <p class="sc-note" data-reveal style="--i:1">A pre-write hook blocks bad edits before they land. A stop hook catches a runaway session. A command hook rewrites the shell call before it runs.</p>
       <div class="hooks" data-reveal style="--i:2">
-        <div class="hook"><span class="hk">read-before-edit</span><span class="hd">No mutation until the file was read this session.</span></div>
-        <div class="hook"><span class="hk">sql injection</span><span class="hd">Interpolated SQL gets blocked. Parameters or nothing.</span></div>
-        <div class="hook"><span class="hk">tests for files</span><span class="hd">Every source file maps to the test it owes.</span></div>
-        <div class="hook"><span class="hk">rtk rewriter</span><span class="hd">Shell commands get filtered, shortened, or stopped.</span></div>
-        <div class="hook"><span class="hk">localhost fetch</span><span class="hd">Containers use service names, not fake localhost.</span></div>
-        <div class="hook meta"><span class="hk">file size cop</span><span class="hd">About to write a 900-line monster? It warns first.</span></div>
+        <div class="hook"><span class="hk">sql-injection</span><span class="hd">Interpolated SQL gets blocked. Parameters or nothing.</span></div>
+        <div class="hook"><span class="hk">tests-for-files</span><span class="hd">Every source file maps to the test it owes.</span></div>
+        <div class="hook"><span class="hk">rtk-rewriter</span><span class="hd">Shell commands get filtered, shortened, or stopped.</span></div>
+        <div class="hook"><span class="hk">localhost-fetch</span><span class="hd">Containers use service names, not fake localhost.</span></div>
+        <div class="hook"><span class="hk">file-size-cop</span><span class="hd">About to write a 900-line monster? It warns first.</span></div>
+        <div class="hook meta"><span class="hk">privilege-drop-checker</span><span class="hd">Containers that run as root don't make it past this.</span></div>
       </div>
     </section>
 
