@@ -343,6 +343,9 @@ h1.title{
 .hooks .hook .hk{ font-family:var(--mono); font-size:15px; color:var(--accent-ink); white-space:nowrap; flex:0 0 22ch; }
 .hooks .hook .hd{ font-size:17px; line-height:1.3; color:var(--ink-soft); }
 .hooks .hook.meta .hd{ color:var(--ink); }
+.hooks.hooks-three{ grid-template-columns:repeat(3,minmax(0,1fr)); gap:0 30px; }
+.hooks.hooks-three .hook{ flex-direction:column; align-items:flex-start; gap:8px; padding:16px 0 14px; }
+.hooks.hooks-three .hook .hk{ flex:0 0 auto; }
 .s-hook-intro{ justify-content:center; }
 .s-hook-intro .hook-wrap{
   display:grid; grid-template-columns:420px minmax(0,1fr); gap:54px;
@@ -671,7 +674,7 @@ h1.title{
       <span class="kicker" data-reveal style="--i:0">Hooks</span>
       <h2 class="sc-title" data-reveal style="--i:1">Hooks make the repo push back</h2>
       <p class="sc-note" data-reveal style="--i:1">A pre-write hook blocks bad edits before they land. A stop hook catches a runaway session. A command hook rewrites the shell call before it runs.</p>
-      <div class="hooks" data-reveal style="--i:2">
+      <div class="hooks hooks-three" data-reveal style="--i:2">
         <div class="hook"><span class="hk">sql-injector</span><span class="hd">Interpolated SQL gets blocked. Parameters or nothing.</span></div>
         <div class="hook"><span class="hk">tests-for-files</span><span class="hd">Every source file maps to the test it owes.</span></div>
         <div class="hook"><span class="hk">file-size-cop</span><span class="hd">About to write a 900-line monster? It warns first.</span></div>
